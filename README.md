@@ -26,6 +26,6 @@ Requerimientos
          ]
      }
    ```
- - Un rol de IAM en la cuenta (que **debe** llamarse **oas-ami-builder-role**) basado en "Amazon EC2 AWS Service Roles" para poder construir la AMI's base
+ - Un rol de IAM en la cuenta (que **debe** llamarse **oas-ami-builder-role**) basado en "Amazon EC2 AWS Service Roles" para poder construir las AMI's base
    - El rol **oas-ami-builder-role** debe tener acceso de lectura a todo el bucket **oas-repo**
  - La región utilizada debe contar con una VPC por defecto configurada correctamente, esto viene por defecto en las cuentas de Amamzon AWS creadas a partir del año 201X
