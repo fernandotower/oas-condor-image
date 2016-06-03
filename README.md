@@ -9,7 +9,7 @@ Requerimientos
  - Un usuario de AWS (el cuál llamaremos **ami-builder** a partir de ahora) con suficientes accesos para crear AMIs
    - El usuraio **ami-builder** debe tener los privilegios suficientes los cuales están listados en esta página: https://www.packer.io/docs/builders/amazon.html en la sección "Using An IAM Instance Profile"
    - El usuario **ami-builder** debe poder pasar roles a las instancias, adjuntarle esta política:
-     ```
+   ```
      {
          "Version": "2012-10-17",
          "Statement": [
@@ -25,7 +25,7 @@ Requerimientos
              }
          ]
      }
-     ```
+   ```
  - Un rol de IAM en la cuenta (que **debe** llamarse **oas-ami-builder-role**) basado en "Amazon EC2 AWS Service Roles" para poder construir la AMI's base
    - El rol **oas-ami-builder-role** debe tener acceso de lectura a todo el bucket **oas-repo**
  - La región utilizada debe contar con una VPC por defecto configurada correctamente, esto viene por defecto en las cuentas de Amamzon AWS creadas a partir del año 201X
