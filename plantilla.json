@@ -13,7 +13,14 @@
       "region": "us-east-1",
       "source_ami": "ami-6d1c2007",
       "ssh_username": "centos",
-      "iam_instance_profile": "oas-ami-builder-role"
+      "iam_instance_profile": "oas-ami-builder-role",
+      "launch_block_device_mappings": [
+        {
+          "device_name": "/dev/sda1",
+          "delete_on_termination": true,
+          "volume_size": 8
+        }
+      ]
     }
   ],
 
