@@ -1,0 +1,34 @@
+{
+
+  "variables": {
+    "oas-repo-name": "{{env `OAS_REPO`}}"
+  },
+
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "ssh_pty": "true",
+      "ami_name": "oas-condor-estudiantes {{timestamp}}",
+      "instance_type": "t2.nano",
+      "region": "us-east-1",
+      "source_ami": "ami-6d1c2007",
+      "ssh_username": "centos",
+      "iam_instance_profile": "oas-ami-builder-role"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "install_aws.sh"
+    },
+    {
+      "type": "shell",
+      "script": "instalar-condor-estudiantes.sh",
+      "environment_vars": [
+        "oas_repo={{user `oas-repo-name`}}"
+      ]
+    }
+  ]
+}
+
