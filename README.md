@@ -9,7 +9,7 @@ Requerimientos
 
    Estos archivos se consiguen en la página web de Oracle y se necesita una cuenta para poderlos bajar, Oracle no ofrece una forma desatendida de bajarlos.
  - Un usuario de AWS (el cuál llamaremos **ami-builder** a partir de ahora) con suficientes accesos para crear AMIs
-   - El usuraio **ami-builder** debe tener los privilegios listados en esta página: https://www.packer.io/docs/builders/amazon.html en la sección "Using An IAM Instance Profile"
+   - El usuario **ami-builder** debe tener los privilegios listados en esta página: https://www.packer.io/docs/builders/amazon.html en la sección "Using An IAM Instance Profile"
    - El usuario **ami-builder** debe poder pasar roles a las instancias, adjuntarle esta política:
    ```
      {
