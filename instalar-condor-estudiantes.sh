@@ -18,7 +18,7 @@ sudo yum install -y \
 rm -rfv /tmp/rpms
 
 # SELINUX
-sed -i.bak 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
+sudo sed -i.bak 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
 
 # Repositorio EPEL
 sudo yum install -y epel-release
