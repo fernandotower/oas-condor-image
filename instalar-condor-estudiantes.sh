@@ -17,13 +17,28 @@ sudo yum install -y \
 
 rm -rfv /tmp/rpms
 
+# Red # en la wiki está para la red de la Univerisidad se adaptará a AWS
+
+# Proxy
+
 # SELINUX
 sudo sed -i.bak 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
 sudo setenforce permissive
 
+# Fecha
+sudo mv /etc/localtime /etc/localtime.bkp
+sudo cp /usr/share/zoneinfo/America/Bogota /etc/localtime
+sudo yum install -y ntp
+sudo systemctl enable ntpd.service
+sudo timedatectl set-timezone America/Bogota
+sudo timedatectl set-ntp true
+# sudo systemctl restart ntpd.service # no es necesario iniciar servicios mientras se crea la ami
+
 # Repositorio EPEL
 sudo yum install -y epel-release
-sudo yum update -y
+
+#Actualizar el sistema
+sudo yum -y update --skip-broken
 
 # MARIADB
 sudo yum install -y mariadb-server mariadb
