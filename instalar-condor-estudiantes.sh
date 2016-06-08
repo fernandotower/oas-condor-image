@@ -40,6 +40,13 @@ sudo -y yum install epel-release
 #Actualizar el sistema
 sudo yum -y update --skip-broken
 
+# Ajustar la prioridad de uso de la swap
+sudo echo "" >> /etc/sysctl.conf
+sudo echo "# Controla el porcentaje de uso de la memoria de intercambio con respecto a la RAM" >> /etc/sysctl.conf
+sudo echo "vm.swappiness=25" >> /etc/sysctl.conf
+sudo sysctl -w vm.swappiness=25
+
+
 # Mysql
 sudo yum -y install mariadb-server mariadb
 sudo systemctl start mariadb
