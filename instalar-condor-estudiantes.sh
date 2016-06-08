@@ -18,8 +18,7 @@ sudo yum install -y \
 rm -rfv /tmp/rpms
 
 # SELINUX
-# vi /etc/selinux/config #se debe ralizar con el comado sed
-# cambiar  SELINUX=enforcing por SELINUX=permissive
+sudo sed -i -- 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
 
 # Repositorio EPEL
 sudo -y yum install epel-release
