@@ -17,12 +17,28 @@ sudo yum install -y \
 
 rm -rfv /tmp/rpms
 
+# Red # en la wiki está para la red de la Univerisidad se adaptar a AWS
+
+# Proxy
+
 # SELINUX
+sudo setenforce 0
 sudo sed -i -- 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
+
+# Fecha
+sudo mv /etc/localtime /etc/localtime.bkp
+sudo cp /usr/share/zoneinfo/America/Bogota /etc/localtime
+sudo yum install -y ntp
+sudo systemctl enable ntpd.service
+sudo timedatectl set-timezone America/Bogota
+sudo timedatectl set-ntp true
+sudo systemctl restart ntpd.service
 
 # Repositorio EPEL
 sudo -y yum install epel-release
-sudo yum -y update
+
+#Actualizar el sistema
+sudo yum -y update --skip-broken
 
 # Mysql
 sudo yum -y install mariadb-server mariadb
@@ -31,7 +47,7 @@ sudo systemctl start mariadb
 
 # APACHE
 sudo yum -y install httpd
-sudo systemctl enable httpd #Al inicio arranca apache
+sudo systemctl enable httpd #Arraque al inicio
 sudo apachectl start
 
 # PHP
