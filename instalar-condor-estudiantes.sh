@@ -38,13 +38,13 @@ sudo apachectl start
 sudo yum -y install php
 
 # PHPMYADMIN
-sudo yum -y install phpmyadmin
-#vi /etc/httpd/conf.d/phpMyAdmin.conf #con sed
-#comentar:
-#   Require ip 127.0.0.1
-#   Require ip ::1
-# agregar
-#   Require all granted
+sudo yum -y install phpmyadmin 
+# Se comentan las líneas Require ip 127.0.0.1 y Require ip ::1
+# Se agrega la línea Require all granted
+sudo sed -i -- 's/Require ip 127.0.0.1/#Require ip 127.0.0.1/g' /etc/httpd/conf.d/phpMyAdmin.conf
+sudo sed -i -- 's/Require ip ::1/#Require ip ::1/g' /etc/httpd/conf.d/phpMyAdmin.conf
+sudo sed -i -- '/Require ip ::1/a\ \ \ \ \ \ \ Require all granted' /etc/httpd/conf.d/phpMyAdmin.conf
+
 sudo apachectl restart
 
 
