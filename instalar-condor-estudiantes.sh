@@ -16,3 +16,36 @@ sudo yum install -y \
                 "/tmp/rpms/oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm"
 
 rm -rfv /tmp/rpms
+
+# SELINUX
+# vi /etc/selinux/config #se debe ralizar con el comado sed
+# cambiar  SELINUX=enforcing por SELINUX=permissive
+
+# Repositorio EPEL
+sudo -y yum install epel-release
+sudo yum -y update
+
+# Mysql
+sudo yum -y install mariadb-server mariadb
+sudo systemctl start mariadb
+#sudo mysql_secure_installation # este comando es asistido se debe modificar
+
+# APACHE
+sudo yum -y install httpd
+sudo systemctl enable httpd #Al inicio arranca apache
+sudo apachectl start
+
+# PHP
+sudo yum -y install php
+
+# PHPMYADMIN
+sudo yum -y install phpmyadmin
+#vi /etc/httpd/conf.d/phpMyAdmin.conf #con sed
+#comentar:
+#   Require ip 127.0.0.1
+#   Require ip ::1
+# agregar
+#   Require all granted
+sudo apachectl restart
+
+
