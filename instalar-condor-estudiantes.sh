@@ -18,17 +18,17 @@ sudo yum install -y \
 rm -rfv /tmp/rpms
 
 # SELINUX
-# vi /etc/selinux/config #se debe ralizar con el comado sed
-# cambiar  SELINUX=enforcing por SELINUX=permissive
+sed -i.bak 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
 
 # Repositorio EPEL
-sudo -y yum install epel-release
-sudo yum -y update
+sudo yum install -y epel-release
+sudo yum update -y
 
-# Mysql
-sudo yum -y install mariadb-server mariadb
+# MariaDB
+sudo yum install -y mariadb-server mariadb
+sudo systemctl enable mariadb
 sudo systemctl start mariadb
-#sudo mysql_secure_installation # este comando es asistido se debe modificar
+#sudo mysql_secure_installation # TODO: este comando es asistido se debe modificar
 
 # APACHE
 sudo yum -y install httpd
@@ -47,5 +47,3 @@ sudo yum -y install phpmyadmin
 # agregar
 #   Require all granted
 sudo apachectl restart
-
-
