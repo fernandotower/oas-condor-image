@@ -2,6 +2,7 @@
 
 set -eu
 
+echo instalando drivers de oracle
 mkdir -pv /tmp/rpms
 
 echo "se bajaran los paquetes rpm necesarios del bucket '${oas_repo}'"
@@ -17,46 +18,67 @@ sudo yum install -y \
 
 rm -rfv /tmp/rpms
 
+echo escribiendo /etc/profile.d/oas_oracle_home.sh
+sudo tee -a /etc/profile.d/oas_oracle_home.sh << EOF
+export ORACLE_HOME=/usr/lib/oracle/12.1/client64
+export TNS_ADMIN=/etc/httpd/conf
+EOF
+
+echo escribiendo /etc/ld.so.conf.d/oas_oracle.conf
+sudo tee -a /etc/ld.so.conf.d/oas_oracle.confa << EOF
+/usr/lib/oracle/12.1/client64/lib
+EOF
+sudo ldconfig
+
 # Red # en la wiki está para la red de la Univerisidad se adaptará a AWS
 
 # Proxy
 
 # SELINUX
-sudo sed -i.packer-bak 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
+echo configurando selinux
 sudo setenforce permissive
+sudo sed -i.packer-bak 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
+egrep '^SELINUX=' /etc/selinux/config
 
 # Fecha
-sudo mv /etc/localtime /etc/localtime.bkp
-sudo cp /usr/share/zoneinfo/America/Bogota /etc/localtime
+echo configurando hora
+sudo mv /etc/localtime /etc/localtime.packer-bak
+sudo ln -sv /usr/share/zoneinfo/America/Bogota /etc/localtime
 sudo yum install -y ntp
 sudo systemctl enable ntpd.service
 sudo timedatectl set-timezone America/Bogota
 sudo timedatectl set-ntp true
-# sudo systemctl restart ntpd.service # no es necesario iniciar servicios mientras se crea la ami
+date
+
+echo agregando epel y actualizando paquetes
 
 # Repositorio EPEL
 sudo yum install -y epel-release
 
 #Actualizar el sistema
-sudo yum -y update --skip-broken
+sudo yum update -y --skip-broken
 
 # Ajustar la prioridad de uso de la swap
-sudo echo "" >> /etc/sysctl.conf
-sudo echo "# Controla el porcentaje de uso de la memoria de intercambio con respecto a la RAM" >> /etc/sysctl.conf
-sudo echo "vm.swappiness=25" >> /etc/sysctl.conf
-sudo sysctl -w vm.swappiness=25
+echo escribiendo /etc/sysctl.d/50-oas-vm-swappiness.conf
+sudo tee -a /etc/sysctl.d/50-oas-vm-swappiness.conf << EOF
+# Controla el porcentaje de uso de la memoria de intercambio con respecto a la RAM
+vm.swappiness=25
+EOF
+sudo sysctl --system
+sudo sysctl vm.swappiness
 
 # MARIADB
+echo instalando mariadb
 sudo yum install -y mariadb-server mariadb
-sudo sed -i.packer-bak \
-  -e '/# instructions in http:\/\/fedoraproject.org\/wiki\/Systemd/a \\n# Recommended in standard MySQL setup'
-  -e '/# Recommended in standard MySQL setup/a sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES' \
-  /etc/my.cnf
+echo escribiendo /etc/my.cnf.d/oas_sql_mode.cnf
+sudo tee -a /etc/my.cnf.d/oas_sql_mode.cnf << EOF
+[mysqld]
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+EOF
 sudo systemctl enable mariadb
 sudo systemctl start mariadb
 
 # inicio mysql_secure_installation
-# esto funciona, pero quizá debería hacerse en la instancia real para que no todas terminen con el mismo password de root o quizá esto no es un problema
 newpass="$(uuidgen)"
 sudo tee /var/lib/mysql_secure_installation_answers > /dev/null << EOF
 
@@ -69,32 +91,34 @@ Y
 EOF
 sudo chmod 400 /var/lib/mysql_secure_installation_answers
 sudo cat /var/lib/mysql_secure_installation_answers | sudo mysql_secure_installation
+unset newpass
 # fin mysql_secure_installation
 
-sudo systemctl stop mariadb # después de configurar la base la podemos parar
+sudo systemctl stop mariadb
+
+echo instalando apache, php y phpmyadmin
 
 # APACHE
 sudo yum install -y httpd
 sudo systemctl enable httpd
-# sudo apachectl start # mientras se crea la ami no es necesario iniciar cosas
 
 # PHP
 sudo yum install -y php
 
 # PHPMYADMIN
-sudo yum install -y phpmyadmin
-# Se comentan las líneas "Require ip 127.0.0.1" y "Require ip ::1"
-# Se agrega la línea "Require all granted"
-sudo sed -i.packer-bak \
-  -e 's/Require ip 127.0.0.1/#Require ip 127.0.0.1/g' \
-  -e 's/Require ip ::1/#Require ip ::1/g' \
-  -e '/Require ip ::1/a\ \ \ \ \ \ \ Require all granted' \
-  /etc/httpd/conf.d/phpMyAdmin.conf
+sudo yum install -y phpmyadmin augeas
 
-if diff /etc/httpd/conf.d/phpMyAdmin.conf.packer-bak /etc/httpd/conf.d/phpMyAdmin.conf
-then
-  echo sin cambios en phpMyAdmin.conf
-fi
+sudo cp /etc/httpd/conf.d/phpMyAdmin.conf /etc/httpd/conf.d/phpMyAdmin.conf.packer-bak
+sudo augtool << 'EOF'
+rm  /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/']/IfModule[arg='mod_authz_core.c']/RequireAny/directive
+set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/']/IfModule[arg='mod_authz_core.c']/RequireAny/directive Require
+set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/']/IfModule[arg='mod_authz_core.c']/RequireAny/*[self::directive="Require"]/arg[1] all
+set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/']/IfModule[arg='mod_authz_core.c']/RequireAny/*[self::directive="Require"]/arg[2] granted
+rm  /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/setup/']/IfModule[arg='mod_authz_core.c']/RequireAny/directive
+set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/setup/']/IfModule[arg='mod_authz_core.c']/RequireAny/directive Require
+set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/setup/']/IfModule[arg='mod_authz_core.c']/RequireAny/*[self::directive="Require"]/arg[1] all
+set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/setup/']/IfModule[arg='mod_authz_core.c']/RequireAny/*[self::directive="Require"]/arg[2] granted
+save
+EOF
 
-# sudo apachectl restart # mientras se crea la ami no es necesario iniciar cosas
 sudo apachectl -t
