@@ -28,7 +28,7 @@ Requerimientos
          ]
      }
    ```
-   - Por conveniencia el usuario **ami-builder** podría tener privilegios de listar roles y verificar cómo estos están asignados, esta política no es necesaria, sólamente conveniente:
+   - Por conveniencia el usuario **ami-builder** podría tener privilegios de listar roles y verificar cómo estos están asignados, **esta política no es necesaria, sólamente conveniente**:
    ```
    {
      "Version": "2012-10-17",
@@ -52,7 +52,7 @@ Requerimientos
    }
    ```
  - Un rol de IAM en la cuenta (que **debe** llamarse **oas-ami-builder-role**) basado en "Amazon EC2 AWS Service Roles" para poder construir las AMI's base
-   - El rol **oas-ami-builder-role** debe tener acceso de lectura a todo el bucket **oas-repo**, como ayuda se incluye esta política de IAM de ejemplo, se debe reemplazar `<bucket-name>` por el nombre del bucket que se creó.
+   - El rol **oas-ami-builder-role** debe tener acceso de lectura a todo el bucket **oas-repo**, como ayuda se incluye esta política de IAM de ejemplo, **se debe reemplazar** `<bucket-name>` **por el nombre del bucket que se creó**.
    ```
    {
      "Version": "2012-10-17",
