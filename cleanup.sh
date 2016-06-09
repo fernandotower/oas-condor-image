@@ -19,7 +19,7 @@ then
   echo "AWS_DEFAULT_PROFILE   = '${AWS_DEFAULT_PROFILE:-}'"
   echo "AWS_ACCESS_KEY_ID     = '${AWS_ACCESS_KEY_ID:-}'"
   echo "AWS_SECRET_ACCESS_KEY = '***'"
-  echo "AWS_SESSION_TOKEN     = '${AWS_SESSION_TOKEN:-}'"
+  echo "AWS_SESSION_TOKEN     = '***'"
 else
   echo "Se usará el perfil guardado en '~/.aws/credentials' llamado '${AWS_PROFILE}'"
   export AWS_PROFILE
@@ -33,11 +33,31 @@ fi
 
 NOW="$(date +%s)"
 
+echo buscando instancias para borrar
+
+delete_instances="$(
+  aws --output json --region us-east-1 ec2 describe-instances --filters \
+    "Name=tag:promoted,Values=no" \
+    "Name=tag:Name,Values=Packer Builder" \
+    "Name=tag:ami-name,Values=oas-condor-estudiantes" |
+  jq -r --arg NOW "${NOW}" '.Reservations[]|.Instances[] | select(.Tags[]|(.Key == "expiration-timestamp" and (.Value|tonumber) <= ($NOW|tonumber))) | .InstanceId'
+)"
+
+if [ -n "$delete_instances" ]
+then
+  echo borrando instances $delete_instances
+  set -x
+  aws --region us-east-1 ec2 terminate-instances --instance-ids $delete_instances || true
+  set +x
+fi
+
 echo buscando amis para borrar
 
 delete_amis="$(
-  aws --output json --region us-east-1 ec2 describe-images --filters "Name=tag:promoted,Values=no" |
-  jq -r --arg NOW "${NOW}" '.Images[] | select(.Tags[]|(.Key == "expiration-timestamp" and .Value <= $NOW)) | .ImageId'
+  aws --output json --region us-east-1 ec2 describe-images --filters \
+    "Name=tag:promoted,Values=no" \
+    "Name=tag:ami-name,Values=oas-condor-estudiantes" |
+  jq -r --arg NOW "${NOW}" '.Images[] | select(.Tags[]|(.Key == "expiration-timestamp" and (.Value|tonumber) <= ($NOW|tonumber))) | .ImageId'
 )"
 
 if [ -n "$delete_amis" ]
@@ -48,14 +68,17 @@ then
     set -x
     aws --region us-east-1 ec2 deregister-image --image-id "${ami}" || true
     set +x
+    sleep 2 # durmiendo un poco para no saturar la API
   done
 fi
 
 echo buscando snapshots para borrar
 
 delete_snap="$(
-  aws --output json --region us-east-1 ec2 describe-snapshots --filters "Name=tag:promoted,Values=no" |
-  jq -r --arg NOW "${NOW}" '.Snapshots[] | select(.Tags[]|(.Key == "expiration-timestamp" and .Value <= $NOW)) | .SnapshotId'
+  aws --output json --region us-east-1 ec2 describe-snapshots --filters \
+    "Name=tag:promoted,Values=no" \
+    "Name=tag:ami-name,Values=oas-condor-estudiantes" |
+  jq -r --arg NOW "${NOW}" '.Snapshots[] | select(.Tags[]|(.Key == "expiration-timestamp" and (.Value|tonumber) <= ($NOW|tonumber))) | .SnapshotId'
 )"
 
 if [ -n "$delete_snap" ]
@@ -66,5 +89,6 @@ then
     set -x
     aws --region us-east-1 ec2 delete-snapshot --snapshot-id "${snap}" || true
     set +x
+    sleep 2 # durmiendo un poco para no saturar la API
   done
 fi

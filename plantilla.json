@@ -4,7 +4,7 @@
     "oas-repo-name": "{{env `OAS_REPO`}}",
     "oas-vpc-id": "{{env `OAS_VPC`}}",
     "oas-subnet-id": "{{env `OAS_SUBNET`}}",
-    "oas-external-ref": "{{env `OAS_EXTERNAL_REF`}}",
+    "external-ref": "{{env `OAS_EXTERNAL_REF`}}",
     "expiration-timestamp": "{{env `OAS_EXPIRATION_TIMESTAMP`}}",
     "packer-expiration-timestamp": "{{env `PACKER_EXPIRATION_TIMESTAMP`}}"
   },

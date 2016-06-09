@@ -28,11 +28,13 @@ then
   echo "AWS_DEFAULT_PROFILE   = '${AWS_DEFAULT_PROFILE:-}'"
   echo "AWS_ACCESS_KEY_ID     = '${AWS_ACCESS_KEY_ID:-}'"
   echo "AWS_SECRET_ACCESS_KEY = '***'"
-  echo "AWS_SESSION_TOKEN     = '${AWS_SESSION_TOKEN:-}'"
+  echo "AWS_SESSION_TOKEN     = '***'"
 else
   echo "Se usará el perfil guardado en '~/.aws/credentials' llamado '${AWS_PROFILE}'"
   export AWS_PROFILE
 fi
+
+./cleanup.sh -p "${AWS_PROFILE:-}" || true
 
 OAS_REPO="${oas_repo:-${OAS_REPO:-}}"
 

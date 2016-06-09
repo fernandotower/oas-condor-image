@@ -103,7 +103,7 @@ Dado que este proyecto crea recursos de manera programática, la cantidad de rec
  * TIMESTAMP + 1 mes para las AMI y Snapshots
  * TIMESTAMP + 1 día para las instancias temporales de Packer
 
-Algún sistema o script de mantenimiento podría tomar estas etiquetas para realizar un proceso de limpieza. Ejemplo en pseudo-código:
+El script de mantenimiento `./cleanup.sh` toma estas etiquetas para realizar un proceso de limpieza. Siguiendo este pseudo-código:
 
 ```
 Por cada uno de los recursos creados programáticamente en la cuenta de AWS
@@ -111,3 +111,5 @@ Por cada uno de los recursos creados programáticamente en la cuenta de AWS
     => borar el recurso
 Fin
 ```
+
+Este script es invocado como parte del proceso de creación de nuevas AMI aunque el administrador de la cuenta también lo puede ejecutar manualmente para hacer limpieza de recursos de manera inmediata.
