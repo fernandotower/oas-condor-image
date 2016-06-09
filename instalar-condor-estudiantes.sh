@@ -50,7 +50,20 @@ sudo sysctl -w vm.swappiness=25
 # Mysql
 sudo yum -y install mariadb-server mariadb
 sudo systemctl start mariadb
+sudo systemctl enable mariadb.service #Inicia en el arranque
 #sudo mysql_secure_installation # este comando es asistido se debe modificar
+ # Configuración my.cnf
+sudo cp /etc/my.cnf /etc/my.cnf.bak
+sudo sed -i -- '/# instructions in http:\/\/fedoraproject.org\/wiki\/Systemd/a \\n# Recommended in standard MySQL setup' /etc/my.cnf
+sudo sed -i -- '/# Recommended in standard MySQL setup/a sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES ' /etc/my.cnf
+ # Configuración server.cnf
+
+
+
+
+# Recommended in standard MySQL setup
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+
 
 # APACHE
 sudo yum -y install httpd
