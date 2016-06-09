@@ -79,3 +79,35 @@ Requerimientos
    }
    ```
  - La región de AWS utilizada debe contar con una VPC y una subred configuradas correctamente, esto viene por defecto en las cuentas de Amazon AWS. No está en el **scope** de este proyecto crear dichos recursos.
+
+Mantenimiento
+-------------
+
+Dado que este proyecto crea recursos de manera programática, la cantidad de recursos no utilizados puede llegar a crecer si no se mantiene bajo control. Este proyecto etiqueta todos los recuersos creados de la siguiente manera:
+
+**external-ref**
+
+ * `BRANCH-GITCOMMIT-BUILDCOUNTER` si el proceso es ejecutado desde el sistema de CI
+ * `SNAPSHOT-SNAPSHOT-TIMESTAMP` si el proceso es ejecutado manualmente
+
+**ami-name**
+
+ * oas-condor-estudiantes
+
+**promoted**
+
+ * no
+
+**expiration-timestamp**
+
+ * TIMESTAMP + 1 mes para las AMI y Snapshots
+ * TIMESTAMP + 1 día para las instancias temporales de Packer
+
+Algún sistema o script de mantenimiento podría tomar estas etiquetas para realizar un proceso de limpieza. Ejemplo en pseudo-código:
+
+```
+Por cada uno de los recursos creados programáticamente en la cuenta de AWS
+  Si "expiration-timestamp" es menor que el timestamp actual && "promoted" es igual a "no"
+    => borar el recurso
+Fin
+```

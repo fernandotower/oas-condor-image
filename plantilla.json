@@ -3,14 +3,29 @@
   "variables": {
     "oas-repo-name": "{{env `OAS_REPO`}}",
     "oas-vpc-id": "{{env `OAS_VPC`}}",
-    "oas-subnet-id": "{{env `OAS_SUBNET`}}"
+    "oas-subnet-id": "{{env `OAS_SUBNET`}}",
+    "oas-external-ref": "{{env `OAS_EXTERNAL_REF`}}",
+    "expiration-timestamp": "{{env `OAS_EXPIRATION_TIMESTAMP`}}",
+    "packer-expiration-timestamp": "{{env `PACKER_EXPIRATION_TIMESTAMP`}}"
   },
 
   "builders": [
     {
       "type": "amazon-ebs",
       "ssh_pty": "true",
-      "ami_name": "oas-condor-estudiantes {{timestamp}}",
+      "ami_name": "oas-condor-estudiantes {{user `external-ref`}}",
+      "tags": {
+        "ami-name": "oas-condor-estudiantes",
+        "external-ref": "{{user `external-ref`}}",
+        "promoted": "no",
+        "expiration-timestamp": "{{user `expiration-timestamp`}}"
+      },
+      "run_tags": {
+        "ami-name": "oas-condor-estudiantes",
+        "external-ref": "{{user `external-ref`}}",
+        "promoted": "no",
+        "expiration-timestamp": "{{user `packer-expiration-timestamp`}}"
+      },
       "instance_type": "t2.micro",
       "region": "us-east-1",
       "source_ami": "ami-6d1c2007",
