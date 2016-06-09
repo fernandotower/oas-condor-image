@@ -1,7 +1,9 @@
 {
 
   "variables": {
-    "oas-repo-name": "{{env `OAS_REPO`}}"
+    "oas-repo-name": "{{env `OAS_REPO`}}",
+    "oas-vpc-id": "{{env `OAS_VPC`}}",
+    "oas-subnet-id": "{{env `OAS_SUBNET`}}"
   },
 
   "builders": [
@@ -21,7 +23,9 @@
           "delete_on_termination": true,
           "volume_size": 30
         }
-      ]
+      ],
+      "vpc_id": "{{user `oas-vpc-id`}}",
+      "subnet_id": "{{user `oas-subnet-id`}}"
     }
   ],
 
@@ -39,4 +43,3 @@
     }
   ]
 }
-
