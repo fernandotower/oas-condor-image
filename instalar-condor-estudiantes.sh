@@ -22,7 +22,7 @@ rm -rfv /tmp/rpms
 # Proxy
 
 # SELINUX
-sudo sed -i.bak 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
+sudo sed -i.packer-bak 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
 sudo setenforce permissive
 
 # Fecha
@@ -40,8 +40,18 @@ sudo yum install -y epel-release
 #Actualizar el sistema
 sudo yum -y update --skip-broken
 
+# Ajustar la prioridad de uso de la swap
+sudo echo "" >> /etc/sysctl.conf
+sudo echo "# Controla el porcentaje de uso de la memoria de intercambio con respecto a la RAM" >> /etc/sysctl.conf
+sudo echo "vm.swappiness=25" >> /etc/sysctl.conf
+sudo sysctl -w vm.swappiness=25
+
 # MARIADB
 sudo yum install -y mariadb-server mariadb
+sudo sed -i.packer-bak \
+  -e '/# instructions in http:\/\/fedoraproject.org\/wiki\/Systemd/a \\n# Recommended in standard MySQL setup'
+  -e '/# Recommended in standard MySQL setup/a sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES' \
+  /etc/my.cnf
 sudo systemctl enable mariadb
 sudo systemctl start mariadb
 
