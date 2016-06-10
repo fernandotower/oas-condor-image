@@ -1,4 +1,6 @@
 build:
-  image: ci.192.168.12.212.xip.io:5000/oas/packer-buildpack:master-78388e1-5
+  image: ci.192.168.12.212.xip.io:5000/oas/packer-buildpack:master-323e279-6
   commands:
-  - ./run.sh
+  - ls -l
+  - pwd
+  - ls -lR
