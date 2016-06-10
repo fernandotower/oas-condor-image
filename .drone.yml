@@ -1,4 +1,4 @@
 build:
-  image: registry:5000/oas/packer-buildpack:master-78388e1-5
+  image: registry.192.168.12.212.xip.io:5000/oas/packer-buildpack:master-78388e1-5
   commands:
   - ./run.sh
