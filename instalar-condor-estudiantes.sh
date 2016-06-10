@@ -11,6 +11,10 @@ aws s3 cp "s3://${oas_repo}/rpms/oracle-instantclient12.1-basic-12.1.0.2.0-1.x86
 aws s3 cp "s3://${oas_repo}/rpms/oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm" "/tmp/rpms/"
 aws s3 cp "s3://${oas_repo}/rpms/oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm" "/tmp/rpms/"
 
+# TODO cambiar creación por verificación
+md5sum /tmp/rpms/oracle-instantclient12.1* || true
+# TODO remover esto
+
 sudo yum install -y \
                 "/tmp/rpms/oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm" \
                 "/tmp/rpms/oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm" \
@@ -29,10 +33,6 @@ sudo tee -a /etc/ld.so.conf.d/oas_oracle.confa << EOF
 /usr/lib/oracle/12.1/client64/lib
 EOF
 sudo ldconfig
-
-# Red # en la wiki está para la red de la Univerisidad se adaptará a AWS
-
-# Proxy
 
 # SELINUX
 echo configurando selinux
