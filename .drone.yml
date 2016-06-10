@@ -5,6 +5,6 @@ build:
   - OAS_SUBNET=subnet-b46b0bec
   - AWS_ACCESS_KEY_ID=$$AWS_ACCESS_KEY_ID
   - AWS_SECRET_ACCESS_KEY=$$AWS_SECRET_ACCESS_KEY
-  image: ci.192.168.12.212.xip.io:5000/oas/packer-buildpack:master-5f8f1b5-7
+  image: ci.192.168.12.212.xip.io:5000/oas/packer-buildpack:master-c0eeaab-8
   commands:
   - ./run.sh
