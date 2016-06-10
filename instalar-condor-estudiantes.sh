@@ -102,7 +102,8 @@ echo instalando apache, php y phpmyadmin
 sudo yum install -y httpd
 sudo systemctl enable httpd
 # modificar en /etc/httpd/conf/httpd.conf
-#ServerAdmin computo@udistrital.edu.co
+
+sed -i 's/ServerAdmin root@localhost/ServerAdmin computo@udistrital.edu.co/g' /etc/httpd/conf/httpd.conf  
 
 #Configurar Apache HTTP Server para una alta demanda de servicio: 
 
