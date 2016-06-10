@@ -28,7 +28,7 @@ else
   export AWS_PROFILE
 fi
 
-if ! which jq > /dev/null
+if ! type jq > /dev/null
 then
   echo Instala JQ primero https://stedolan.github.io/jq/download/
   exit 1
