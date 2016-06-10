@@ -2,10 +2,13 @@
 
 set -eu
 
-while getopts ":p:" opt; do
+while getopts ":fp:" opt; do
   case $opt in
     p)
       aws_profile="${OPTARG}"
+      ;;
+    f)
+      force="true"
       ;;
   esac
 done
@@ -32,6 +35,11 @@ then
 fi
 
 NOW="$(date +%s)"
+if [ "${force:-}" = "true" ]
+then
+  echo se buscaran amis mas nuevas
+  NOW="$((NOW+2592000))"
+fi
 
 echo buscando instancias para borrar
 
