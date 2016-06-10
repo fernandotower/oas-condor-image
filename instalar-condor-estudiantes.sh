@@ -152,7 +152,7 @@ default_charset = "UTF-8"
 upload_max_filesize = 48M
 allow_url_include = On
 date.timezone = "America/Bogota"
-oci8.connection_class = "DEFAULT_POOL"
+oci8.connection_class = "DEFAULT_CONNECTION_CLASS"
 EOF
 
 # PHPMYADMIN
@@ -175,16 +175,16 @@ echo verificar sintaxis de apache
 sudo apachectl -t
 
 echo finalizando
-echo el archivo /etc/httpd/conf/tnsnames.ora debe crearse durante runtime mediante user-data y debe tener un pool llamado DEFAULT_POOL
+echo el archivo /etc/httpd/conf/tnsnames.ora debe crearse durante runtime mediante user-data y debe tener una conexión de clase DEFAULT_CONNECTION_CLASS
 echo creando /etc/cron.hourly/50-oas-check-tnsnames-ora
 sudo tee /etc/cron.hourly/50-oas-check-tnsnames-ora << 'EOF'
 #!/bin/sh
 set -eu
-sleep 300 # esperar mientras se crea la ami
+sleep 300 # esperar mientras se crea la ami o se aprovisiona el server por medio de user-data
 if [ ! -e /etc/httpd/conf/tnsnames.ora ]
 then
   /usr/local/bin/aws --region us-east-1 ec2 terminate-instances --instance-ids `curl http://169.254.169.254/latest/meta-data/instance-id`
-else if ! egrep '^DEFAULT_POOL' /etc/httpd/conf/tnsnames.ora > /dev/null
+else if ! grep DEFAULT_CONNECTION_CLASS
 then
   /usr/local/bin/aws --region us-east-1 ec2 terminate-instances --instance-ids `curl http://169.254.169.254/latest/meta-data/instance-id`
 fi
