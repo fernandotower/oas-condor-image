@@ -79,6 +79,14 @@ Requerimientos
    }
    ```
  - La región de AWS utilizada debe contar con una VPC y una subred configuradas correctamente, esto viene por defecto en las cuentas de Amazon AWS. No está en el **scope** de este proyecto crear dichos recursos.
+ - Un rol de IAM en la cuenta (el cuál a partir de ahora llamaremos **oas-condor-role**) basado en "Amazon EC2 AWS Service Roles"
+   - El rol **oas-condor-role** debe tener los siguientes privilegios.
+     - terminate-instances
+
+Seguridad
+---------
+
+Durante la creación desatendida se configura automáticamente la base de datos MariDB y las respuestas al `mysql_secure_installation` se encuentran en el archivo `/var/lib/mysql_secure_installation_answers` este archivo se encuentra protegido por el modo `400`.
 
 Mantenimiento
 -------------

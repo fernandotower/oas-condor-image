@@ -34,8 +34,6 @@ else
   export AWS_PROFILE
 fi
 
-./cleanup.sh -p "${AWS_PROFILE:-}" || true
-
 OAS_REPO="${oas_repo:-${OAS_REPO:-}}"
 
 if [ -z "${OAS_REPO}" ]
@@ -94,6 +92,8 @@ PACKER_EXPIRATION_TIMESTAMP="$((NOW+86400))"
 export OAS_EXTERNAL_REF
 export OAS_EXPIRATION_TIMESTAMP
 export PACKER_EXPIRATION_TIMESTAMP
+
+./cleanup.sh -p "${AWS_PROFILE:-}" || true
 
 packer validate plantilla.json
 packer build plantilla.json
