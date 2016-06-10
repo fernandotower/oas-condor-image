@@ -2,8 +2,8 @@
 
 set -eu
 
-# AUGEAS
-sudo yum install -y augeas
+# AUGEAS y GIT
+sudo yum install -y augeas git
 
 echo instalando drivers de oracle
 mkdir -pv /tmp/rpms
