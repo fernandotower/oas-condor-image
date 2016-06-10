@@ -39,7 +39,7 @@ OAS_REPO="${oas_repo:-${OAS_REPO:-}}"
 if [ -z "${OAS_REPO}" ]
 then
   unset OAS_REPO
-  echo "No se ha definido el nombre del bucket de S3, definalo con -r <nombre_repo> o con la variable de entorno OAS_REPO" > /dev/stderr
+  echo "No se ha definido el nombre del bucket de S3, definalo con -r <nombre_repo> o con la variable de entorno OAS_REPO"
   exit 1
 else
   echo "Se usará el bucket de S3 llamaddo '${OAS_REPO}'"
@@ -51,7 +51,7 @@ OAS_VPC="${oas_vpc:-${OAS_VPC:-}}"
 if [ -z "${OAS_VPC}" ]
 then
   unset OAS_VPC
-  echo "No se ha definido el id de la VPC, definalo con -v <vpc_id> o con la variable de entorno OAS_VPC" > /dev/stderr
+  echo "No se ha definido el id de la VPC, definalo con -v <vpc_id> o con la variable de entorno OAS_VPC"
   exit 1
 else
   echo "Se usará la VPC con el id '${OAS_VPC}'"
@@ -63,7 +63,7 @@ OAS_SUBNET="${oas_subnet:-${OAS_SUBNET:-}}"
 if [ -z "${OAS_SUBNET}" ]
 then
   unset OAS_SUBNET
-  echo "No se ha definido el id de la Subnet, definalo con -s <subnet_id> o con la variable de entorno OAS_SUBNET" > /dev/stderr
+  echo "No se ha definido el id de la Subnet, definalo con -s <subnet_id> o con la variable de entorno OAS_SUBNET"
   exit 1
 else
   echo "Se usará la Subnet con el id '${OAS_SUBNET}'"
