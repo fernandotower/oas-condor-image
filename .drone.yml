@@ -1,7 +1,8 @@
-environment:
-  OAS_REPO: oas-repo
-
 build:
+  environment:
+  - OAS_REPO=oas-repo
+  - OAS_VPC=vpc-422eda25
+  - OAS_SUBNET=subnet-b46b0bec
   image: ci.192.168.12.212.xip.io:5000/oas/packer-buildpack:master-5f8f1b5-7
   commands:
   - ./run.sh
