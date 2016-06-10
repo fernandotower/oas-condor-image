@@ -101,13 +101,13 @@ echo instalando apache, php y phpmyadmin
 # APACHE
 sudo yum install -y httpd
 sudo systemctl enable httpd
-# modificar en /etc/httpd/conf/httpd.conf
+# Define el ServerAdmin de apache
 
 sed -i 's/ServerAdmin root@localhost/ServerAdmin computo@udistrital.edu.co/g' /etc/httpd/conf/httpd.conf  
 
 #Configurar Apache HTTP Server para una alta demanda de servicio: 
 
-#despues de el texto # virtual host being defined.
+#despues del texto # virtual host being defined.
 #agregar las líneas
 <IfModule prefork.c>
 Timeout              150
