@@ -27,12 +27,14 @@ then
   echo "Se usaran las credenciales de AWS por defecto"
   echo "AWS_DEFAULT_PROFILE   = '${AWS_DEFAULT_PROFILE:-}'"
   echo "AWS_ACCESS_KEY_ID     = '${AWS_ACCESS_KEY_ID:-}'"
-  echo "AWS_SECRET_ACCESS_KEY = '${AWS_DEFAULT_PROFILE:-}'"
-  echo "AWS_SESSION_TOKEN     = '${AWS_SESSION_TOKEN:-}'"
+  echo "AWS_SECRET_ACCESS_KEY = '***'"
+  echo "AWS_SESSION_TOKEN     = '***'"
 else
   echo "Se usará el perfil guardado en '~/.aws/credentials' llamado '${AWS_PROFILE}'"
   export AWS_PROFILE
 fi
+
+./cleanup.sh -p "${AWS_PROFILE:-}" || true
 
 OAS_REPO="${oas_repo:-${OAS_REPO:-}}"
 
@@ -69,6 +71,29 @@ else
   echo "Se usará la Subnet con el id '${OAS_SUBNET}'"
   export OAS_SUBNET
 fi
+
+if [ -n "${CI_BRANCH:-}" ]
+then
+  ci_branch="${CI_BRANCH}-"
+fi
+if [ -n "${CI_COMMIT:-}" ]
+then
+  ci_commit="${CI_COMMIT}-"
+fi
+if [ -n "${CI_BUILD_NUMBER:-}" ]
+then
+  ci_bn="${CI_BUILD_NUMBER}"
+fi
+NOW="$(date +%s)"
+OAS_EXTERNAL_REF="${ci_branch:-SNAPSHOT-}${ci_commit:-SNAPSHOT-}${ci_bn:-${NOW}}"
+# un mes de expiración
+OAS_EXPIRATION_TIMESTAMP="$((NOW+2592000))"
+# un día de expiración
+PACKER_EXPIRATION_TIMESTAMP="$((NOW+86400))"
+
+export OAS_EXTERNAL_REF
+export OAS_EXPIRATION_TIMESTAMP
+export PACKER_EXPIRATION_TIMESTAMP
 
 packer validate plantilla.json
 packer build plantilla.json
