@@ -24,11 +24,11 @@ fi
 NOW="$(date +%s)"
 if [ "${force:-}" = "true" ]
 then
-  echo se buscaran recursos mas nuevos
+  echo Se buscaran recursos mas nuevos
   NOW="$((NOW+2592000))"
 fi
 
-echo buscando instancias para borrar
+echo Buscando instancias para borrar
 
 delete_instances="$(
   aws --output json --region us-east-1 ec2 describe-instances --filters \
@@ -40,13 +40,13 @@ delete_instances="$(
 
 if [ -n "$delete_instances" ]
 then
-  echo borrando instances $delete_instances
+  echo Borrando instancias $delete_instances
   set -x
   aws --region us-east-1 ec2 terminate-instances --instance-ids $delete_instances || true
   set +x
 fi
 
-echo buscando amis para borrar
+echo Buscando amis para borrar
 
 delete_amis="$(
   aws --output json --region us-east-1 ec2 describe-images --filters \
@@ -57,7 +57,7 @@ delete_amis="$(
 
 if [ -n "$delete_amis" ]
 then
-  echo borrando amis $delete_amis
+  echo Borrando amis $delete_amis
   for ami in $delete_amis
   do
     set -x
@@ -67,7 +67,7 @@ then
   done
 fi
 
-echo buscando snapshots para borrar
+echo Buscando snapshots para borrar
 
 delete_snap="$(
   aws --output json --region us-east-1 ec2 describe-snapshots --filters \
@@ -78,7 +78,7 @@ delete_snap="$(
 
 if [ -n "$delete_snap" ]
 then
-  echo borrando snapshots $delete_snap
+  echo Borrando snapshots $delete_snap
   for snap in $delete_snap
   do
     set -x

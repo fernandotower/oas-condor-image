@@ -60,7 +60,7 @@
     },
     {
       "type": "shell",
-      "script": "scripts/instalar-aws.sh"
+      "script": "scripts/instalar-drivers-oracle.sh"
     },
     {
       "type": "shell",
@@ -68,10 +68,6 @@
       "environment_vars": [
         "oas_repo={{user `oas-repo-name`}}"
       ]
-    },
-    {
-      "type": "shell",
-      "script": "scripts/instalar-oci8.sh"
     }
   ]
 

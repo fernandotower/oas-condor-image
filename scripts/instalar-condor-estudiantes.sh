@@ -2,49 +2,19 @@
 
 set -eu
 
-echo instalando drivers de oracle
-mkdir -pv /tmp/rpms
-
-echo "se bajaran los paquetes rpm necesarios del bucket '${oas_repo}'"
-
-aws s3 cp "s3://${oas_repo}/rpms/oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm" "/tmp/rpms/"
-aws s3 cp "s3://${oas_repo}/rpms/oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm" "/tmp/rpms/"
-aws s3 cp "s3://${oas_repo}/rpms/oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm" "/tmp/rpms/"
-
-echo verificando integridad de paquetes externos
-md5sum -c - << EOF
-2d711cf98c19bd4f291838b4a1ed7b6a  /tmp/rpms/oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm
-ac5bf56bce1c1521e1ca1984c3374a93  /tmp/rpms/oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm
-d757d82cb8ac110e8d353e27a348139a  /tmp/rpms/oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm
-EOF
-
-sudo yum install -y \
-                "/tmp/rpms/oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm" \
-                "/tmp/rpms/oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm" \
-                "/tmp/rpms/oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm"
-
-rm -rfv /tmp/rpms
-
-echo escribiendo /etc/profile.d/oas_oracle_home.sh
-sudo tee -a /etc/profile.d/oas_oracle_home.sh << EOF
-export ORACLE_HOME=/usr/lib/oracle/12.1/client64
-export TNS_ADMIN=/etc/httpd/conf
-EOF
-
-echo escribiendo /etc/ld.so.conf.d/oas_oracle.conf
-sudo tee -a /etc/ld.so.conf.d/oas_oracle.confa << EOF
-/usr/lib/oracle/12.1/client64/lib
-EOF
-sudo ldconfig
+figlet condor
+figlet estudiantes
 
 # SELINUX
-echo configurando selinux
+# rationale: TODO
+echo Configurando SELINUX
 sudo setenforce permissive
 sudo sed -i.packer-bak 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
 egrep '^SELINUX=' /etc/selinux/config
 
-# Fecha
-echo configurando hora
+# NTP
+# rationale: Tener el servidor en la zona horaria local
+echo Configurando hora
 sudo mv /etc/localtime /etc/localtime.packer-bak
 sudo ln -sv /usr/share/zoneinfo/America/Bogota /etc/localtime
 sudo systemctl enable ntpd.service
@@ -53,8 +23,11 @@ sudo timedatectl set-ntp true
 date
 
 # Ajustar la prioridad de uso de la swap
-echo escribiendo /etc/sysctl.d/50-oas-vm-swappiness.conf
-sudo tee -a /etc/sysctl.d/50-oas-vm-swappiness.conf << EOF
+# vm.swappiness
+# rationale: TODO
+vm_swap_config="/etc/sysctl.d/50-oas-vm-swappiness.conf"
+echo Escribiendo $vm_swap_config
+sudo tee $vm_swap_config << EOF
 # Controla el porcentaje de uso de la memoria de intercambio con respecto a la RAM
 vm.swappiness=25
 EOF
@@ -62,16 +35,21 @@ sudo sysctl --system
 sudo sysctl vm.swappiness
 
 # MARIADB
-echo instalando mariadb
-echo escribiendo /etc/my.cnf.d/oas_sql_mode.cnf
-sudo tee -a /etc/my.cnf.d/oas_sql_mode.cnf << EOF
+# sql_mode
+# rationale: TODO
+echo Configurando MariaDB
+mariadb_sql_mode_config="/etc/my.cnf.d/oas_sql_mode.cnf"
+echo Escribiendo $mariadb_sql_mode_config
+sudo tee $mariadb_sql_mode_config << EOF
 [mysqld]
 sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 EOF
 sudo systemctl enable mariadb
 sudo systemctl start mariadb
 
-# inicio mysql_secure_installation
+# mysql_secure_installation
+# rationale: El password de MariaDB viene por defecto vacío
+echo Realizando mysql_secure_installation
 newpass="$(uuidgen)"
 sudo tee /var/lib/mysql_secure_installation_answers > /dev/null << EOF
 
@@ -85,52 +63,64 @@ EOF
 sudo chmod 400 /var/lib/mysql_secure_installation_answers
 sudo cat /var/lib/mysql_secure_installation_answers | sudo mysql_secure_installation
 unset newpass
-# fin mysql_secure_installation
 
 sudo systemctl stop mariadb
-
-echo instalando apache, php
 
 # APACHE
 sudo systemctl enable httpd
 
-echo configurando apache
-
-# Define el ServerAdmin de Apache
-echo creando /etc/httpd/conf.d/50-oas-serveradmin.conf
-sudo tee /etc/httpd/conf.d/50-oas-serveradmin.conf << EOF
+# ServerAdmin
+# rationale: Cosmético
+echo Configurando apache
+server_admin_config="/etc/httpd/conf.d/50-oas-serveradmin.conf"
+echo Escribiendo $server_admin_config
+sudo tee $server_admin_config << EOF
 ServerAdmin computo@udistrital.edu.co
 EOF
 
-#Configurar Apache HTTP Server para una alta demanda de servicio:
-echo creando /etc/httpd/conf.d/50-oas-prefork.conf
-sudo tee /etc/httpd/conf.d/50-oas-prefork.conf << EOF
+# prefork
+apache_prefork_config="/etc/httpd/conf.d/50-oas-prefork.conf"
+# rationale: La configuración de prefork por defecto no es tán concurrente como esta
+# rationale: TimeOut: El valor por defecto es 60, puede ser muy corto si algún script de PHP se demora más que eso en responder
+# rationale: MaxClients: El valor por defecto es 256
+# rationale: ServerLimit: El valor por defecto es 256
+# rationale: MaxSpareServers: El valor por defecto es 10
+# rationale: MaxRequestsPerChild: El valor por defecto es 10000, un valor menor es mejor si el software no está manjenado bien la memoria
+# rationale: MaxRequestsPerChild: Setting MaxRequestsPerChild to a non-zero value limits the amount of memory that process can consume by (accidental) memory leakage.
+# link: https://httpd.apache.org/docs/current/mod/prefork.html
+# link: https://httpd.apache.org/docs/current/mod/mpm_common.html
+# link: https://httpd.apache.org/docs/current/mod/core.html
+echo Escribiendo $apache_prefork_config
+sudo tee $apache_prefork_config << EOF
 <IfModule prefork.c>
-  Timeout              150
-  ServerLimit          400
-  StartServers         20
-  MinSpareServers      5
-  MaxSpareServers      20
-  MaxClients           400
-  MaxRequestsPerChild  400
+  TimeOut 150
+  MaxClients 400
+  ServerLimit 400
+  MaxSpareServers 20
+  MaxRequestsPerChild 1000
 </IfModule>
 EOF
 
-echo creando /etc/httpd/conf.d/50-oas-keepalive.conf
-sudo tee /etc/httpd/conf.d/50-oas-keepalive.conf << EOF
-MaxKeepAliveRequests 10
-KeepAliveTimeout 0
+keepalive_config="/etc/httpd/conf.d/50-oas-keepalive.conf"
+# rationale: MaxKeepAliveRequests=1000 numero grande de KeepAlive requests
+# rationale: MaxKeepAliveRequests: We recommend that this setting be kept to a high value for maximum server performance.
+# link: https://httpd.apache.org/docs/current/mod/core.html#maxkeepaliverequests
+# rationale: KeepAliveTimeout=1 los requests en el mismo pipeline deben venir antes de 1 segundo para ser consideradas
+# rationale: KeepAliveTimeout: Setting KeepAliveTimeout to a high value may cause performance problems in heavily loaded servers.
+# link: https://httpd.apache.org/docs/current/mod/core.html#maxkeepaliverequests#keepalivetimeout
+echo Escribiendo $keepalive_config
+sudo tee $keepalive_config << EOF
+MaxKeepAliveRequests 1000
+KeepAliveTimeout 1
 EOF
 
-# FIREWALL
-# Esto se gestiona por medio del Security Groups de Amazon
-
-# PHP
-
-echo creando /etc/php.d/50-oas.ini
-sudo tee /etc/php.d/50-oas.ini << EOF
+php_config="/etc/php.d/50-oas.ini"
+# rationale: Configura PHP para las particularidades del software
+# rationale: max_execution_time: coincidir con el valor en apache "TimeOut"
+echo Escribiendo $php_config
+sudo tee $php_config << EOF
 short_open_tag = On
-max_execution_time = 60
+max_execution_time = 150
 max_input_vars = 10000
 post_max_size = 48M
 default_charset = "UTF-8"
@@ -143,27 +133,21 @@ oci8.connection_class = "DEFAULT_CONNECTION_CLASS"
 extension=oci8.so
 EOF
 
-echo verificar sintaxis de apache
+echo Verificar sintaxis de Apache
 sudo apachectl -t
+
+echo Verificar configuraciones de PHP
+figlet phpinfo
+php << EOF
+phpinfo();
+EOF
 
 # SCRIPTS
 sudo chmod -v +x /tmp/oas_scripts/*.sh
 sudo chown -v root:root /tmp/oas_scripts/*.sh
 sudo mv -vi /tmp/oas_scripts/*.sh /usr/local/sbin/
 
-echo finalizando
-echo el archivo /etc/httpd/conf/tnsnames.ora debe crearse durante runtime mediante user-data y debe tener una conexión de clase DEFAULT_CONNECTION_CLASS
-echo creando /etc/cron.hourly/50-oas-check-tnsnames-ora
-sudo tee /etc/cron.hourly/50-oas-check-tnsnames-ora << 'EOF'
-#!/bin/sh
-set -eu
-sleep 300 # esperar mientras se crea la ami o se aprovisiona el server por medio de user-data
-if [ ! -e /etc/httpd/conf/tnsnames.ora ]
-then
-  /usr/local/bin/aws --region us-east-1 ec2 terminate-instances --instance-ids `curl http://169.254.169.254/latest/meta-data/instance-id`
-else if ! grep DEFAULT_CONNECTION_CLASS
-then
-  /usr/local/bin/aws --region us-east-1 ec2 terminate-instances --instance-ids `curl http://169.254.169.254/latest/meta-data/instance-id`
-fi
-EOF
-sudo chmod +x /etc/cron.hourly/50-oas-check-tnsnames-ora
+echo Progamando script de verificación de tnsnames.ora
+ln -sv /usr/local/sbin/check-tnsnames-ora.sh /etc/cron.hourly/50-check-tnsnames-ora.sh
+
+echo Finalizando
