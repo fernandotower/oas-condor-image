@@ -60,14 +60,14 @@
     },
     {
       "type": "shell",
-      "script": "scripts/instalar-drivers-oracle.sh"
-    },
-    {
-      "type": "shell",
-      "script": "scripts/instalar-condor-estudiantes.sh",
+      "script": "scripts/instalar-drivers-oracle.sh",
       "environment_vars": [
         "oas_repo={{user `oas-repo-name`}}"
       ]
+    },
+    {
+      "type": "shell",
+      "script": "scripts/instalar-condor-estudiantes.sh"
     }
   ]
 

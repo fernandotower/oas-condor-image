@@ -4,8 +4,8 @@
 
 set -eu
 
-figlet drivers
-figlet oracle
+figlet -f banner3-D drivers
+figlet -f banner3-D oracle
 
 echo "Se bajaran los paquetes rpm necesarios del bucket '${oas_repo}'"
 
