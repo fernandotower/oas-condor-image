@@ -50,6 +50,11 @@
       "script": "install_aws.sh"
     },
     {
+      "type": "file",
+      "source": "oas_scripts",
+      "destination": "/tmp"
+    },
+    {
       "type": "shell",
       "script": "instalar-condor-estudiantes.sh",
       "environment_vars": [

@@ -1,10 +1,10 @@
 build:
   image: ci.192.168.12.212.xip.io:5000/oas/packer-buildpack:master-b021917-12
   environment:
-  - OAS_REPO=oas-repo
-  - OAS_VPC=vpc-422eda25
-  - OAS_SUBNET=subnet-b46b0bec
-  - AWS_ACCESS_KEY_ID=$$AWS_ACCESS_KEY_ID
-  - AWS_SECRET_ACCESS_KEY=$$AWS_SECRET_ACCESS_KEY
+    OAS_REPO: oas-repo
+    OAS_VPC: vpc-422eda25
+    OAS_SUBNET: subnet-b46b0bec
+    AWS_ACCESS_KEY_ID: $$AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $$AWS_SECRET_ACCESS_KEY
   commands:
   - ./run.sh

@@ -174,6 +174,11 @@ EOF
 echo verificar sintaxis de apache
 sudo apachectl -t
 
+# SCRIPTS
+sudo chmod -v +x /tmp/oas_scripts/*.sh
+sudo chown -v root:root /tmp/oas_scripts/*.sh
+sudo mv -vi /tmp/oas_scripts/*.sh /usr/local/sbin/
+
 echo finalizando
 echo el archivo /etc/httpd/conf/tnsnames.ora debe crearse durante runtime mediante user-data y debe tener una conexión de clase DEFAULT_CONNECTION_CLASS
 echo creando /etc/cron.hourly/50-oas-check-tnsnames-ora
