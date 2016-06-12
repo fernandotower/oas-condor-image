@@ -2,9 +2,6 @@
 
 set -eu
 
-# GIT
-sudo yum install -y git
-
 echo instalando drivers de oracle
 mkdir -pv /tmp/rpms
 
@@ -50,19 +47,10 @@ egrep '^SELINUX=' /etc/selinux/config
 echo configurando hora
 sudo mv /etc/localtime /etc/localtime.packer-bak
 sudo ln -sv /usr/share/zoneinfo/America/Bogota /etc/localtime
-sudo yum install -y ntp
 sudo systemctl enable ntpd.service
 sudo timedatectl set-timezone America/Bogota
 sudo timedatectl set-ntp true
 date
-
-echo agregando epel y actualizando paquetes
-
-# Repositorio EPEL
-sudo yum install -y epel-release
-
-#Actualizar el sistema
-sudo yum update -y --skip-broken
 
 # Ajustar la prioridad de uso de la swap
 echo escribiendo /etc/sysctl.d/50-oas-vm-swappiness.conf
@@ -75,7 +63,6 @@ sudo sysctl vm.swappiness
 
 # MARIADB
 echo instalando mariadb
-sudo yum install -y mariadb-server mariadb
 echo escribiendo /etc/my.cnf.d/oas_sql_mode.cnf
 sudo tee -a /etc/my.cnf.d/oas_sql_mode.cnf << EOF
 [mysqld]
@@ -105,7 +92,6 @@ sudo systemctl stop mariadb
 echo instalando apache, php
 
 # APACHE
-sudo yum install -y httpd
 sudo systemctl enable httpd
 
 echo configurando apache
@@ -140,7 +126,6 @@ EOF
 # Esto se gestiona por medio del Security Groups de Amazon
 
 # PHP
-sudo yum install -y php
 
 echo creando /etc/php.d/50-oas.ini
 sudo tee /etc/php.d/50-oas.ini << EOF

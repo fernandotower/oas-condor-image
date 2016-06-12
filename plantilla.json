@@ -46,13 +46,21 @@
 
   "provisioners": [
     {
-      "type": "shell",
-      "script": "scripts/instalar-aws.sh"
-    },
-    {
       "type": "file",
       "source": "oas_scripts",
       "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/instalar-repositorios-adicionales.sh"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/instalar-paquetes.sh"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/instalar-aws.sh"
     },
     {
       "type": "shell",

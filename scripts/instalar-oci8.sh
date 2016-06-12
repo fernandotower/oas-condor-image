@@ -2,11 +2,10 @@
 
 set -eu
 
-sudo yum install -y gcc make php-pear php-devel
-
 mkdir /tmp/oci8-install.$$
 pushd  /tmp/oci8-install.$$
-pear download pecl/oci8
+# esta version especifica de oci8 es necesaria para php 5.2 - 5.6 ver => https://pecl.php.net/package/oci8
+pear download pecl/oci8-1.4.10
 tar xvzf oci8-*.tgz
 cd oci8-*
 phpize
