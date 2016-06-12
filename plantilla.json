@@ -47,7 +47,7 @@
   "provisioners": [
     {
       "type": "shell",
-      "script": "install_aws.sh"
+      "script": "scripts/instalar-aws.sh"
     },
     {
       "type": "file",
@@ -56,14 +56,14 @@
     },
     {
       "type": "shell",
-      "script": "instalar-condor-estudiantes.sh",
+      "script": "scripts/instalar-condor-estudiantes.sh",
       "environment_vars": [
         "oas_repo={{user `oas-repo-name`}}"
       ]
     },
     {
       "type": "shell",
-      "script": "instalar-oci8.sh"
+      "script": "scripts/instalar-oci8.sh"
     }
   ]
 
