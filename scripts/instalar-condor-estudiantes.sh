@@ -139,7 +139,9 @@ sudo apachectl -t
 echo Verificar configuraciones de PHP
 figlet -f banner phpinfo | sed 's|^|# |'
 php << EOF               | sed 's|^|# |'
-<? phpinfo(); ?>
+<?php
+  phpinfo();
+?>
 EOF
 
 # SCRIPTS
