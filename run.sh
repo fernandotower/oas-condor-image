@@ -110,4 +110,4 @@ export PACKER_EXPIRATION_TIMESTAMP
 ./cleanup.sh -p "${AWS_PROFILE:-}" || true
 
 packer validate plantilla.json
-# packer build plantilla.json
+packer build plantilla.json
