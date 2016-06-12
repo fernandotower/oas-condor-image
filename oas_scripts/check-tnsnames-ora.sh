@@ -20,7 +20,7 @@ then
   exit 0
 fi
 
-terminate_cmd="/usr/local/bin/aws --region ${instance_region} ec2 terminate-instances --instance-ids ${instance_id}"
+terminate_cmd="aws --region ${instance_region} ec2 terminate-instances --instance-ids ${instance_id}"
 
 if [ ! -e $check_file ]
 then
