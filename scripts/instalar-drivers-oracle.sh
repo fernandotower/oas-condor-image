@@ -4,8 +4,8 @@
 
 set -eu
 
-figlet -f banner drivers
-figlet -f banner oracle
+figlet -f banner drivers | sed 's|^|# |'
+figlet -f banner oracle  | sed 's|^|# |'
 
 echo "Se bajaran los paquetes rpm necesarios del bucket '${oas_repo}'"
 
