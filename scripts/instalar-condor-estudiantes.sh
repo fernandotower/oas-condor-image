@@ -2,8 +2,8 @@
 
 set -eu
 
-figlet -f banner3-D condor
-figlet -f banner3-D estudiantes
+figlet -f banner condor
+figlet -f banner estudiantes
 
 # SELINUX
 # rationale: TODO
@@ -137,7 +137,7 @@ echo Verificar sintaxis de Apache
 sudo apachectl -t
 
 echo Verificar configuraciones de PHP
-figlet -f banner3-D phpinfo
+figlet -f banner phpinfo
 php << EOF
 phpinfo();
 EOF
