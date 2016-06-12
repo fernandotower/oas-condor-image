@@ -140,7 +140,7 @@ EOF
 # Esto se gestiona por medio del Security Groups de Amazon
 
 # PHP
-sudo yum install -y php php-pear php-devel
+sudo yum install -y php
 
 echo creando /etc/php.d/50-oas.ini
 sudo tee /etc/php.d/50-oas.ini << EOF

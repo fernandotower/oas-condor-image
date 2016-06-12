@@ -2,6 +2,8 @@
 
 set -eu
 
+sudo yum install -y gcc make php-pear php-devel
+
 mkdir /tmp/oci8-install.$$
 pushd  /tmp/oci8-install.$$
 pear download pecl/oci8
