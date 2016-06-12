@@ -60,6 +60,10 @@
       "environment_vars": [
         "oas_repo={{user `oas-repo-name`}}"
       ]
+    },
+    {
+      "type": "shell",
+      "script": "instalar-oci8.sh"
     }
   ]
 

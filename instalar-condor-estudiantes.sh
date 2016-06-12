@@ -2,8 +2,8 @@
 
 set -eu
 
-# AUGEAS y GIT
-sudo yum install -y augeas git
+# GIT
+sudo yum install -y git
 
 echo instalando drivers de oracle
 mkdir -pv /tmp/rpms
@@ -102,18 +102,18 @@ unset newpass
 
 sudo systemctl stop mariadb
 
-echo instalando apache, php y phpmyadmin
+echo instalando apache, php
 
 # APACHE
 sudo yum install -y httpd
 sudo systemctl enable httpd
 
 echo configurando apache
+
 # Define el ServerAdmin de Apache
-sudo cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.packer-bak
-sudo augtool << 'EOF'
-set /files/etc/httpd/conf/httpd.conf/*[self::directive="ServerAdmin"]/arg computo@udistrital.edu.co
-save
+echo creando /etc/httpd/conf.d/50-oas-serveradmin.conf
+sudo tee /etc/httpd/conf.d/50-oas-serveradmin.conf << EOF
+ServerAdmin computo@udistrital.edu.co
 EOF
 
 #Configurar Apache HTTP Server para una alta demanda de servicio:
@@ -140,7 +140,7 @@ EOF
 # Esto se gestiona por medio del Security Groups de Amazon
 
 # PHP
-sudo yum install -y php
+sudo yum install -y php php-pear php-devel
 
 echo creando /etc/php.d/50-oas.ini
 sudo tee /etc/php.d/50-oas.ini << EOF
@@ -153,22 +153,9 @@ upload_max_filesize = 48M
 allow_url_include = On
 date.timezone = "America/Bogota"
 oci8.connection_class = "DEFAULT_CONNECTION_CLASS"
-EOF
 
-# PHPMYADMIN
-sudo yum install -y phpmyadmin
-
-sudo cp /etc/httpd/conf.d/phpMyAdmin.conf /etc/httpd/conf.d/phpMyAdmin.conf.packer-bak
-sudo augtool << 'EOF'
-rm  /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/']/IfModule[arg='mod_authz_core.c']/RequireAny/directive
-set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/']/IfModule[arg='mod_authz_core.c']/RequireAny/directive Require
-set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/']/IfModule[arg='mod_authz_core.c']/RequireAny/*[self::directive="Require"]/arg[1] all
-set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/']/IfModule[arg='mod_authz_core.c']/RequireAny/*[self::directive="Require"]/arg[2] granted
-rm  /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/setup/']/IfModule[arg='mod_authz_core.c']/RequireAny/directive
-set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/setup/']/IfModule[arg='mod_authz_core.c']/RequireAny/directive Require
-set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/setup/']/IfModule[arg='mod_authz_core.c']/RequireAny/*[self::directive="Require"]/arg[1] all
-set /files/etc/httpd/conf.d/phpMyAdmin.conf/Directory[arg='/usr/share/phpMyAdmin/setup/']/IfModule[arg='mod_authz_core.c']/RequireAny/*[self::directive="Require"]/arg[2] granted
-save
+[OCI8]
+extension=oci8.so
 EOF
 
 echo verificar sintaxis de apache
