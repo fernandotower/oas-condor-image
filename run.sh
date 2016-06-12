@@ -90,7 +90,7 @@ then
 fi
 if [ -n "${CI_COMMIT:-}" ]
 then
-  ci_commit="${CI_COMMIT}-"
+  ci_commit="${CI_COMMIT:0:7}-"
 fi
 if [ -n "${CI_BUILD_NUMBER:-}" ]
 then
