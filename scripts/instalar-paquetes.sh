@@ -8,6 +8,8 @@
 # rationale: awscli: interactuar con AWS programáticamente
 # rationale: jq: procesar respuestas en JSON de diversas APIs
 
+figlet -f banner paquetes
+
 set -eu
 
-sudo yum install -y git mariadb mariadb-server ntp httpd php gcc make php-pear php-devel figlet awscli jq
+sudo yum install -y git mariadb mariadb-server ntp httpd php gcc make php-pear php-devel awscli jq

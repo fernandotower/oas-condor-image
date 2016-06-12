@@ -148,6 +148,6 @@ sudo chown -v root:root /tmp/oas_scripts/*.sh
 sudo mv -vi /tmp/oas_scripts/*.sh /usr/local/sbin/
 
 echo Progamando script de verificación de tnsnames.ora
-ln -sv /usr/local/sbin/check-tnsnames-ora.sh /etc/cron.hourly/50-check-tnsnames-ora.sh
+sudo ln -sv /usr/local/sbin/check-tnsnames-ora.sh /etc/cron.hourly/50-check-tnsnames-ora.sh
 
 echo Finalizando
