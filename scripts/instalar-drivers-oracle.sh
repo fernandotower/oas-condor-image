@@ -62,6 +62,7 @@ cd oci8-*
 phpize
 ./configure "--with-oci8=shared,instantclient,${oracle_home}/lib"
 make
+make test
 sudo make install
 popd
 rm -rf /tmp/oci8-install.$$
