@@ -86,7 +86,7 @@ Requerimientos
 Seguridad
 ---------
 
-Durante la creación desatendida se configura automáticamente la base de datos MariDB y las respuestas al mysql\_secure\_installation se encuentran en el archivo /var/lib/mysql\_secure\_installation_answers este archivo se encuentra protegido por el modo `400`.
+Durante la creación desatendida se configura automáticamente la base de datos MariDB y las respuestas al **mysql\_secure\_installation** se encuentran en el archivo **/var/lib/mysql\_secure\_installation_answers** este archivo se encuentra protegido por el modo `400`.
 
 Mantenimiento
 -------------
