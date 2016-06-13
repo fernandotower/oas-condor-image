@@ -17,6 +17,6 @@ notify:
     content_type: application/json
     template: >
       {
-        "chat_id": "-29158603",
+        "chat_id": "-130629599",
         "text": "{{repo.full_name}} $${BRANCH} $${COMMIT:0:7} $${BUILD_NUMBER} {{build.status}}"
       }
