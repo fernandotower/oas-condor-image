@@ -45,7 +45,7 @@ Requerimientos
            "iam:ListInstanceProfiles",
            "iam:ListInstanceProfilesForRole",
            "iam:ListRolePolicies",
-           "iam:ListRoles",
+           "iam:ListRoles"
          ],
          "Effect": "Allow",
          "Resource": "*"
