@@ -11,6 +11,7 @@ Requerimientos
  - Un usuario de AWS (el cuál llamaremos **ami-builder** a partir de ahora) con suficientes accesos para crear AMIs
    - El usuario **ami-builder** debe tener los privilegios listados en esta página: https://www.packer.io/docs/builders/amazon.html en la sección "Using An IAM Instance Profile"
    - El usuario **ami-builder** debe poder pasar roles a las instancias, adjuntarle esta política:
+
    ```
      {
          "Version": "2012-10-17",
@@ -29,6 +30,7 @@ Requerimientos
      }
    ```
    - Por conveniencia el usuario **ami-builder** podría tener privilegios de listar roles y verificar cómo estos están asignados, **esta política no es necesaria, sólamente conveniente**:
+
    ```
    {
      "Version": "2012-10-17",
@@ -53,6 +55,7 @@ Requerimientos
    ```
  - Un rol de IAM en la cuenta (que **debe** llamarse **oas-ami-builder-role**) basado en "Amazon EC2 AWS Service Roles" para poder construir las AMI's base
    - El rol **oas-ami-builder-role** debe tener acceso de lectura a todo el bucket **oas-repo**, como ayuda se incluye esta política de IAM de ejemplo, **se debe reemplazar** `<bucket-name>` **por el nombre del bucket que se creó**.
+
    ```
    {
      "Version": "2012-10-17",
@@ -83,7 +86,7 @@ Requerimientos
 Seguridad
 ---------
 
-Durante la creación desatendida se configura automáticamente la base de datos MariDB y las respuestas al `mysql_secure_installation` se encuentran en el archivo `/var/lib/mysql_secure_installation_answers` este archivo se encuentra protegido por el modo `400`.
+Durante la creación desatendida se configura automáticamente la base de datos MariDB y las respuestas al mysql\_secure\_installation se encuentran en el archivo /var/lib/mysql\_secure\_installation_answers este archivo se encuentra protegido por el modo `400`.
 
 Mantenimiento
 -------------
