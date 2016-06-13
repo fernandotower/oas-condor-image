@@ -16,7 +16,8 @@ instance_region="$(jq -r .region <<< "${instance_document}")"
 
 if [ -z "${instance_id}" -o -z "${instance_region}" ]
 then
-  wall "No se pudo encontrar la información de la instancia"
+  msg="No se pudo encontrar la información de la instancia"
+  wall "${msg}"
   exit 0
 fi
 
@@ -24,10 +25,14 @@ terminate_cmd="aws --region ${instance_region} ec2 terminate-instances --instanc
 
 if [ ! -e $check_file ]
 then
-  wall "No existe el archivo '${check_file}'. Terminando instancia."
+  msg="No existe el archivo '${check_file}'. Terminando instancia ${instance_id}."
+  wall "${msg}" || true
+  /usr/local/sbin/telegram-notify.sh "${msg}" || true
   $terminate_cmd
 elif ! grep $check_text $check_file
 then
-  wall "El archivo '${check_file}' no contiene '${check_text}'. Terminando instancia."
+  msg="El archivo '${check_file}' no contiene '${check_text}'. Terminando instancia ${instance_id}."
+  wall "${msg}" || true
+  /usr/local/sbin/telegram-notify.sh "${msg}" || true
   $terminate_cmd
 fi
