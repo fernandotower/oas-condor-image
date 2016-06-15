@@ -10,7 +10,7 @@
 
 sudo yum install -y figlet
 
-figlet -f rev paquetes
+figlet -f banner paquetes
 
 set -eu
 
