@@ -2,7 +2,7 @@
 
 set -eu
 
-figlet -f banner estudiantes condor
+figlet -f rev condor estudiantes
 
 # SELINUX
 # rationale: TODO
@@ -32,38 +32,6 @@ vm.swappiness=25
 EOF
 sudo sysctl --system
 sudo sysctl vm.swappiness
-
-# MARIADB
-# sql_mode
-# rationale: TODO
-echo Configurando MariaDB
-mariadb_sql_mode_config="/etc/my.cnf.d/oas_sql_mode.cnf"
-echo Escribiendo $mariadb_sql_mode_config
-sudo tee $mariadb_sql_mode_config << EOF
-[mysqld]
-sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
-EOF
-sudo systemctl enable mariadb
-sudo systemctl start mariadb
-
-# mysql_secure_installation
-# rationale: El password de MariaDB viene por defecto vacío
-echo Realizando mysql_secure_installation
-newpass="$(uuidgen)"
-sudo tee /var/lib/mysql_secure_installation_answers > /dev/null << EOF
-
-Y
-$newpass
-$newpass
-Y
-Y
-Y
-EOF
-sudo chmod 400 /var/lib/mysql_secure_installation_answers
-sudo cat /var/lib/mysql_secure_installation_answers | sudo mysql_secure_installation
-unset newpass
-
-sudo systemctl stop mariadb
 
 # APACHE
 sudo systemctl enable httpd
@@ -136,7 +104,7 @@ echo Verificar sintaxis de Apache
 sudo apachectl -t
 
 echo Verificar configuraciones de PHP
-figlet -f banner phpinfo
+figlet -f rev phpinfo
 php << EOF
 <?php
   phpinfo();
