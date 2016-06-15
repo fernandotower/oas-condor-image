@@ -83,9 +83,11 @@ export PACKER_EXPIRATION_TIMESTAMP
 source cleanup.sh
 
 packer -machine-readable validate plantilla.json
-packer -machine-readable build plantilla.json | tee -a packer.log
 
+rm -rf target
 mkdir -p target
+
+packer -machine-readable build plantilla.json | tee target/packer.log
 
 # extraer el artefacto a partir del log
 awk -F, '
@@ -99,6 +101,6 @@ awk -F, '
 
   END {
     printf("]")
-  }' packer.log > target/artifacts.json
+  }' target/packer.log > target/artifacts.json
 
 jq . < target/artifacts.json
