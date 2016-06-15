@@ -82,5 +82,5 @@ export PACKER_EXPIRATION_TIMESTAMP
 
 source cleanup.sh
 
-packer validate plantilla.json
-packer build plantilla.json
+packer -machine-readable validate plantilla.json
+packer -machine-readable build plantilla.json
