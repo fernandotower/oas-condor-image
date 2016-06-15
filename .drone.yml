@@ -1,22 +1,43 @@
 build:
-  image: 192.168.12.212:5000/oas/packer-buildpack:master-7645ec5-13
-  environment:
-    OAS_REPO: oas-repo
-    OAS_VPC: vpc-422eda25
-    OAS_SUBNET: subnet-b46b0bec
-    AWS_ACCESS_KEY_ID: $$AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $$AWS_SECRET_ACCESS_KEY
-  commands:
-  - ./run.sh
+  ami:
+    debug: true
+    image: 192.168.12.212:5000/plataforma/packer-buildpack:master-50ee2e1-22
+    environment:
+      OAS_REPO: oas-repo
+      OAS_VPC: vpc-422eda25
+      OAS_SUBNET: subnet-b46b0bec
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: $$AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $$AWS_SECRET_ACCESS_KEY
+    commands:
+      - ./run.sh
+
+publish:
+  docker:
+    registry: 192.168.12.212:5000
+    repo: plataforma/condor-estudiantes-ami
+    tag:
+    - latest
+    - $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER
+    file: Dockerfile
+    insecure: true
+    load: drone/docker/image.tar
+    save:
+      destination: drone/docker/image.tar
+      tag: latest
+
+cache:
+  mount:
+  - drone/docker/image.tar
 
 notify:
   webhook:
-    debug: true
     urls:
     - "https://api.telegram.org/bot$$TELEGRAM_BOT_KEY/sendMessage"
     content_type: application/json
     template: >
       {
         "chat_id": "-130629599",
-        "text": "{{repo.full_name}} $${BRANCH} $${COMMIT:0:7} $${BUILD_NUMBER} {{build.status}}"
+        "parse_mode": "Markdown",
+        "text": "[{{uppercase build.status}}]({{build.link_url}}) {{repo.full_name}}:{{build.branch}}-{{truncate build.commit 7}}-{{build.number}} {{build.author}} authored \"{{truncate build.message 25}}\"... took {{duration build.started_at build.finished_at}}"
       }
