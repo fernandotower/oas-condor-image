@@ -1,5 +1,5 @@
-condor-estudiantes-ami
-======================
+condor-estudiantes-image
+========================
 
  - Para construir localmente ejecute `./local`, necesitará:
    - [Docker](https://www.docker.com/)
@@ -13,12 +13,14 @@ condor-estudiantes-ami
      # vim .drone.sec.yml
      # emacs .drone.sec.yml
      # etc...
-     drone secure --repo plataforma/condor-estudiantes-ami --checksum
+     drone secure --repo plataforma/condor-estudiantes-image --checksum
      rm .drone.sec.yml
      git add .drone.sec
      git commit -m "configurando secretos"
      git push origin master
      ```
+
+Actualmente este repositorio genera imágenes de AWS (AMIs).
 
 Requerimientos
 ==============

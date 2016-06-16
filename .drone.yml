@@ -12,13 +12,14 @@ build:
       AWS_DEFAULT_OUTPUT: "json"
       AWS_DEFAULT_REGION: "us-east-1"
       OAS_EXTERNAL_REF: $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER
+      PACKER_MOCK_CREATION: "false"
     commands:
-      - ./ami.sh
+      - ./ci.sh
 
 publish:
   docker:
     registry: 192.168.12.212:5000
-    repo: plataforma/condor-estudiantes-ami
+    repo: plataforma/condor-estudiantes-image
     tag:
       - latest
       - $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER
