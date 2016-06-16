@@ -1,39 +1,43 @@
 build:
   ami:
     debug: true
-    image: 192.168.12.212:5000/plataforma/packer-buildpack:master-50ee2e1-22
+    image: 192.168.12.212:5000/plataforma/packer-buildpack:master-00d91d1-2
     environment:
-      OAS_REPO: oas-repo
-      OAS_VPC: vpc-422eda25
-      OAS_SUBNET: subnet-b46b0bec
-      AWS_DEFAULT_REGION: us-east-1
+      OAS_REPO: $$OAS_REPO
+      OAS_VPC: $$OAS_VPC
+      OAS_SUBNET: $$OAS_SUBNET
+      OAS_FORCE_CLEANUP: "false"
       AWS_ACCESS_KEY_ID: $$AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY: $$AWS_SECRET_ACCESS_KEY
+      AWS_DEFAULT_OUTPUT: "json"
+      AWS_DEFAULT_REGION: "us-east-1"
+      OAS_EXTERNAL_REF: $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER
     commands:
-      - ./run.sh
+      - ./ami.sh
 
 publish:
   docker:
     registry: 192.168.12.212:5000
     repo: plataforma/condor-estudiantes-ami
     tag:
-    - latest
-    - $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER
+      - latest
+      - $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER
     file: Dockerfile
     insecure: true
-    load: drone/docker/image.tar
+    load: docker/image.tar
     save:
-      destination: drone/docker/image.tar
+      destination: docker/image.tar
       tag: latest
+    storage_driver: overlay
 
 cache:
   mount:
-  - drone/docker/image.tar
+    - docker/image.tar
 
 notify:
   webhook:
     urls:
-    - "https://api.telegram.org/bot$$TELEGRAM_BOT_KEY/sendMessage"
+      - "https://api.telegram.org/bot$$TELEGRAM_BOT_KEY/sendMessage"
     content_type: application/json
     template: >
       {

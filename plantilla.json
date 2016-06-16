@@ -13,15 +13,15 @@
     {
       "type": "amazon-ebs",
       "ssh_pty": "true",
-      "ami_name": "oas-condor-estudiantes {{user `external-ref`}}",
+      "ami_name": "condor-estudiantes {{user `external-ref`}}",
       "tags": {
-        "ami-name": "oas-condor-estudiantes",
+        "ami-name": "condor-estudiantes",
         "external-ref": "{{user `external-ref`}}",
         "promoted": "no",
         "expiration-timestamp": "{{user `expiration-timestamp`}}"
       },
       "run_tags": {
-        "ami-name": "oas-condor-estudiantes",
+        "ami-name": "condor-estudiantes",
         "external-ref": "{{user `external-ref`}}",
         "promoted": "no",
         "expiration-timestamp": "{{user `packer-expiration-timestamp`}}"

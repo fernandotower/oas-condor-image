@@ -2,27 +2,8 @@
 
 set -eu
 
-while getopts ":fp:" opt; do
-  case $opt in
-    p)
-      aws_profile="${OPTARG}"
-      ;;
-    f)
-      force="true"
-      ;;
-  esac
-done
-
-source source/aws.sh
-
-if ! type jq > /dev/null
-then
-  echo Instala JQ primero https://stedolan.github.io/jq/download/
-  exit 1
-fi
-
 NOW="$(date +%s)"
-if [ "${force:-}" = "true" ]
+if [ "${OAS_FORCE_CLEANUP:-}" = "true" ]
 then
   echo Se buscaran recursos mas nuevos
   NOW="$((NOW+2592000))"
@@ -31,10 +12,10 @@ fi
 echo Buscando instancias para borrar
 
 delete_instances="$(
-  aws --output json --region us-east-1 ec2 describe-instances --filters \
+  aws ec2 describe-instances --filters \
     "Name=tag:promoted,Values=no" \
     "Name=tag:Name,Values=Packer Builder" \
-    "Name=tag:ami-name,Values=oas-condor-estudiantes" |
+    "Name=tag:ami-name,Values=condor-estudiantes" |
   jq -r --arg NOW "${NOW}" '.Reservations[]|.Instances[] | select(.Tags[]|(.Key == "expiration-timestamp" and (.Value|tonumber) <= ($NOW|tonumber))) | .InstanceId'
 )"
 
@@ -42,16 +23,16 @@ if [ -n "$delete_instances" ]
 then
   echo Borrando instancias $delete_instances
   set -x
-  aws --region us-east-1 ec2 terminate-instances --instance-ids $delete_instances || true
+  aws terminate-instances --instance-ids $delete_instances
   set +x
 fi
 
 echo Buscando amis para borrar
 
 delete_amis="$(
-  aws --output json --region us-east-1 ec2 describe-images --filters \
+  aws ec2 describe-images --filters \
     "Name=tag:promoted,Values=no" \
-    "Name=tag:ami-name,Values=oas-condor-estudiantes" |
+    "Name=tag:ami-name,Values=condor-estudiantes" |
   jq -r --arg NOW "${NOW}" '.Images[] | select(.Tags[]|(.Key == "expiration-timestamp" and (.Value|tonumber) <= ($NOW|tonumber))) | .ImageId'
 )"
 
@@ -61,7 +42,7 @@ then
   for ami in $delete_amis
   do
     set -x
-    aws --region us-east-1 ec2 deregister-image --image-id "${ami}" || true
+    aws ec2 deregister-image --image-id "${ami}"
     set +x
     sleep 2 # durmiendo un poco para no saturar la API
   done
@@ -70,9 +51,9 @@ fi
 echo Buscando snapshots para borrar
 
 delete_snap="$(
-  aws --output json --region us-east-1 ec2 describe-snapshots --filters \
+  aws ec2 describe-snapshots --filters \
     "Name=tag:promoted,Values=no" \
-    "Name=tag:ami-name,Values=oas-condor-estudiantes" |
+    "Name=tag:ami-name,Values=condor-estudiantes" |
   jq -r --arg NOW "${NOW}" '.Snapshots[] | select(.Tags[]|(.Key == "expiration-timestamp" and (.Value|tonumber) <= ($NOW|tonumber))) | .SnapshotId'
 )"
 
@@ -82,7 +63,7 @@ then
   for snap in $delete_snap
   do
     set -x
-    aws --region us-east-1 ec2 delete-snapshot --snapshot-id "${snap}" || true
+    aws ec2 delete-snapshot --snapshot-id "${snap}"
     set +x
     sleep 2 # durmiendo un poco para no saturar la API
   done
