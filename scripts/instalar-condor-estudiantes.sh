@@ -28,7 +28,7 @@ vm_swap_config="/etc/sysctl.d/50-oas-vm-swappiness.conf"
 echo Escribiendo $vm_swap_config
 sudo tee $vm_swap_config << EOF
 # Controla el porcentaje de uso de la memoria de intercambio con respecto a la RAM
-vm.swappiness=25
+vm.swappiness=0
 EOF
 sudo sysctl --system
 sudo sysctl vm.swappiness
