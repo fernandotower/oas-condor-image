@@ -26,7 +26,11 @@
         "promoted": "no",
         "expiration-timestamp": "{{user `packer-expiration-timestamp`}}"
       },
-      "instance_type": "t2.micro",
+      "instance_type": "m3.medium",
+      "spot_price": "0.020",
+      "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
+      "ssh_timeout": "10m",
+      "associate_public_ip_address": true,
       "region": "us-east-1",
       "source_ami": "ami-6d1c2007",
       "ssh_username": "centos",

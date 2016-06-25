@@ -1,3 +1,3 @@
-FROM 192.168.12.212:5000/plataforma/base-os:master-a417036-3
+FROM 172.17.0.1:5000/plataforma/base-os:master-c924483-0
 ADD target artifacts
 VOLUME /artifacts
