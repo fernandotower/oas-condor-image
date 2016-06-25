@@ -11,8 +11,10 @@ build:
       AWS_SECRET_ACCESS_KEY: $$AWS_SECRET_ACCESS_KEY
       AWS_DEFAULT_OUTPUT: json
       AWS_DEFAULT_REGION: us-east-1
+      AWS_SPOT_PRICE_BID: 0.020
       OAS_EXTERNAL_REF: $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER
       PACKER_MOCK_CREATION: false
+      PACKER_INSTANCE_TYPE: m3.medium
     commands:
       - ./ci.sh
 

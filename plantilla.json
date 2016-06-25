@@ -6,7 +6,9 @@
     "oas-subnet-id": "{{env `OAS_SUBNET`}}",
     "external-ref": "{{env `OAS_EXTERNAL_REF`}}",
     "expiration-timestamp": "{{env `OAS_EXPIRATION_TIMESTAMP`}}",
-    "packer-expiration-timestamp": "{{env `PACKER_EXPIRATION_TIMESTAMP`}}"
+    "packer-expiration-timestamp": "{{env `PACKER_EXPIRATION_TIMESTAMP`}}",
+    "spot_price_bid": "{{env `AWS_SPOT_PRICE_BID`}}",
+    "instance_type": "{{env `PACKER_INSTANCE_TYPE`}}"
   },
 
   "builders": [
@@ -26,8 +28,8 @@
         "promoted": "no",
         "expiration-timestamp": "{{user `packer-expiration-timestamp`}}"
       },
-      "instance_type": "m3.medium",
-      "spot_price": "0.020",
+      "instance_type": "{{user `instance_type`}}",
+      "spot_price": "{{user `spot_price_bid`}}",
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ssh_timeout": "10m",
       "associate_public_ip_address": true,

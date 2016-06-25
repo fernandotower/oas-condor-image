@@ -78,6 +78,35 @@ Requerimientos
      ]
    }
    ```
+
+   - El usuario **ami-builder** debe poder consultar y solicitar la creación de "spot instances" (esto permite reducir el valor de la instancia en ejecución para la creación de AMIs aprovechando el mercado de instancias no utilizadas). Esta política es necesaria si se establece el valor de **AWS_SPOT_PRICE_BID** en el archivo `.drone.yml` diferente de `0`.
+
+
+   ```
+   {
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Sid": "Stmt1466839177000",
+               "Effect": "Allow",
+               "Action": [
+                   "ec2:CancelSpotInstanceRequests",
+                   "ec2:DescribeSpotDatafeedSubscription",
+                   "ec2:DescribeSpotFleetInstances",
+                   "ec2:DescribeSpotFleetRequestHistory",
+                   "ec2:DescribeSpotFleetRequests",
+                   "ec2:DescribeSpotInstanceRequests",
+                   "ec2:DescribeSpotPriceHistory",
+                   "ec2:RequestSpotInstances"
+               ],
+               "Resource": [
+                   "*"
+               ]
+           }
+       ]
+   }
+   ```
+
  - Un rol de IAM en la cuenta (que **debe** llamarse **oas-ami-builder-role**) basado en "Amazon EC2 AWS Service Roles" para poder construir las AMI's base
    - El rol **oas-ami-builder-role** debe tener acceso de lectura a todo el bucket **oas-repo**, como ayuda se incluye esta política de IAM de ejemplo, **se debe reemplazar** `<bucket-name>` **por el nombre del bucket que se creó**.
 
