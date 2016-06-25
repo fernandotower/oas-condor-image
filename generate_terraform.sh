@@ -10,8 +10,8 @@ then
   exit 1
 fi
 
-tee target/condor-estudiantes-image.tf << EOF
-variable "condor_estudiantes_image" {
+tee target/condor-image.tf << EOF
+variable "condor_image" {
   type = "string"
   default = "${imagen_encontrada}"
 }

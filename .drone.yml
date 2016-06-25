@@ -21,7 +21,7 @@ build:
 publish:
   docker:
     registry: 172.17.0.1:5000
-    repo: plataforma/condor-estudiantes-image
+    repo: plataforma/condor-image
     tag:
       - latest
       - $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER

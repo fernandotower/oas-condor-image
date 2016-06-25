@@ -2,7 +2,7 @@
 
 set -eu
 
-figlet -f banner estudiantes
+figlet -f banner condor
 
 # SELINUX
 # rationale: TODO

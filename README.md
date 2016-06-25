@@ -1,5 +1,5 @@
-condor-estudiantes-image
-========================
+condor-image
+============
 
  - Para construir localmente ejecute `./local`, necesitará:
    - [Docker](https://www.docker.com/)
@@ -14,7 +14,7 @@ condor-estudiantes-image
    # vim .drone.sec.yml
    # emacs .drone.sec.yml
    # etc...
-   drone secure --repo plataforma/condor-estudiantes-image --checksum
+   drone secure --repo plataforma/condor-image --checksum
    rm .drone.sec.yml
    git add .drone.sec
    git commit -m "configurando secretos"
@@ -154,7 +154,7 @@ Dado que este proyecto crea recursos de manera programática, la cantidad de rec
 
 **ami-name**
 
- * condor-estudiantes
+ * condor
 
 **promoted**
 

@@ -15,7 +15,7 @@ delete_instances="$(
   aws ec2 describe-instances --filters \
     "Name=tag:promoted,Values=no" \
     "Name=tag:Name,Values=Packer Builder" \
-    "Name=tag:ami-name,Values=condor-estudiantes" |
+    "Name=tag:ami-name,Values=condor" |
   jq -r --arg NOW "${NOW}" '.Reservations[]|.Instances[] | select(.Tags[]|(.Key == "expiration-timestamp" and (.Value|tonumber) <= ($NOW|tonumber))) | .InstanceId'
 )"
 
@@ -32,7 +32,7 @@ echo Buscando amis para borrar
 delete_amis="$(
   aws ec2 describe-images --filters \
     "Name=tag:promoted,Values=no" \
-    "Name=tag:ami-name,Values=condor-estudiantes" |
+    "Name=tag:ami-name,Values=condor" |
   jq -r --arg NOW "${NOW}" '.Images[] | select(.Tags[]|(.Key == "expiration-timestamp" and (.Value|tonumber) <= ($NOW|tonumber))) | .ImageId'
 )"
 
@@ -53,7 +53,7 @@ echo Buscando snapshots para borrar
 delete_snap="$(
   aws ec2 describe-snapshots --filters \
     "Name=tag:promoted,Values=no" \
-    "Name=tag:ami-name,Values=condor-estudiantes" |
+    "Name=tag:ami-name,Values=condor" |
   jq -r --arg NOW "${NOW}" '.Snapshots[] | select(.Tags[]|(.Key == "expiration-timestamp" and (.Value|tonumber) <= ($NOW|tonumber))) | .SnapshotId'
 )"
 

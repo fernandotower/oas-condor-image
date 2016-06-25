@@ -15,15 +15,15 @@
     {
       "type": "amazon-ebs",
       "ssh_pty": "true",
-      "ami_name": "condor-estudiantes {{user `external-ref`}}",
+      "ami_name": "condor {{user `external-ref`}}",
       "tags": {
-        "ami-name": "condor-estudiantes",
+        "ami-name": "condor",
         "external-ref": "{{user `external-ref`}}",
         "promoted": "no",
         "expiration-timestamp": "{{user `expiration-timestamp`}}"
       },
       "run_tags": {
-        "ami-name": "condor-estudiantes",
+        "ami-name": "condor",
         "external-ref": "{{user `external-ref`}}",
         "promoted": "no",
         "expiration-timestamp": "{{user `packer-expiration-timestamp`}}"
@@ -73,7 +73,7 @@
     },
     {
       "type": "shell",
-      "script": "scripts/instalar-condor-estudiantes.sh"
+      "script": "scripts/instalar-condor.sh"
     }
   ]
 
