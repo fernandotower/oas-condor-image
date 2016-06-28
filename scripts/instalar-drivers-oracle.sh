@@ -12,26 +12,22 @@ echo "Se bajaran los paquetes rpm necesarios del bucket '${oas_repo}'"
 # link: http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html
 basic_rpm="oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm"
 devel_rpm="oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm"
-sqlplus_rpm="oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm"
 oracle_home="/usr/lib/oracle/12.1/client64"
 
 mkdir -pv /tmp/rpms
 
 aws s3 cp "s3://${oas_repo}/rpms/${basic_rpm}" "/tmp/rpms/"
 aws s3 cp "s3://${oas_repo}/rpms/${devel_rpm}" "/tmp/rpms/"
-aws s3 cp "s3://${oas_repo}/rpms/${sqlplus_rpm}" "/tmp/rpms/"
 
 echo Verificando integridad de paquetes externos
 md5sum -c - << EOF
 2d711cf98c19bd4f291838b4a1ed7b6a  /tmp/rpms/${basic_rpm}
 ac5bf56bce1c1521e1ca1984c3374a93  /tmp/rpms/${devel_rpm}
-d757d82cb8ac110e8d353e27a348139a  /tmp/rpms/${sqlplus_rpm}
 EOF
 
 sudo yum install -y \
                 "/tmp/rpms/${basic_rpm}" \
-                "/tmp/rpms/${devel_rpm}" \
-                "/tmp/rpms/${sqlplus_rpm}"
+                "/tmp/rpms/${devel_rpm}"
 
 rm -rfv /tmp/rpms
 

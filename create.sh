@@ -11,9 +11,6 @@ PACKER_EXPIRATION_TIMESTAMP="$((now+86400))" # un día
 export OAS_EXPIRATION_TIMESTAMP
 export PACKER_EXPIRATION_TIMESTAMP
 
-rm -rf target
-mkdir -p target
-
 if [ "${PACKER_MOCK_CREATION:-}" != "true" ]
 then
   packer -machine-readable build plantilla.json | tee target/packer.log

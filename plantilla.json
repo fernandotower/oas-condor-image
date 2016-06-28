@@ -1,14 +1,15 @@
 {
 
   "variables": {
-    "oas-repo-name": "{{env `OAS_REPO`}}",
-    "oas-vpc-id": "{{env `OAS_VPC`}}",
-    "oas-subnet-id": "{{env `OAS_SUBNET`}}",
+    "oas-repo-name": "{{env `STACK_RepositorioRPM`}}",
+    "oas-vpc-id": "{{env `STACK_AmiBuilderVPC`}}",
+    "oas-subnet-id": "{{env `STACK_AmiBuilderSubnet1`}}",
+    "oas-amibuilder-role": "{{env `STACK_AmiBuilderInstanceProfile`}}",
     "external-ref": "{{env `OAS_EXTERNAL_REF`}}",
     "expiration-timestamp": "{{env `OAS_EXPIRATION_TIMESTAMP`}}",
     "packer-expiration-timestamp": "{{env `PACKER_EXPIRATION_TIMESTAMP`}}",
-    "spot_price_bid": "{{env `AWS_SPOT_PRICE_BID`}}",
-    "instance_type": "{{env `PACKER_INSTANCE_TYPE`}}"
+    "spot-price-bid": "{{env `AWS_SPOT_PRICE_BID`}}",
+    "instance-type": "{{env `PACKER_INSTANCE_TYPE`}}"
   },
 
   "builders": [
@@ -28,15 +29,15 @@
         "promoted": "no",
         "expiration-timestamp": "{{user `packer-expiration-timestamp`}}"
       },
-      "instance_type": "{{user `instance_type`}}",
-      "spot_price": "{{user `spot_price_bid`}}",
+      "instance_type": "{{user `instance-type`}}",
+      "spot_price": "{{user `spot-price-bid`}}",
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ssh_timeout": "10m",
       "associate_public_ip_address": true,
       "region": "us-east-1",
       "source_ami": "ami-6d1c2007",
       "ssh_username": "centos",
-      "iam_instance_profile": "oas-ami-builder-role",
+      "iam_instance_profile": "{{user `oas-amibuilder-role`}}",
       "launch_block_device_mappings": [
         {
           "volume_type": "gp2",

@@ -3,9 +3,7 @@ build:
     debug: true
     image: localhost:5000/plataforma/packer-buildpack:master-a01c657-0
     environment:
-      OAS_REPO: $$OAS_REPO
-      OAS_VPC: $$OAS_VPC
-      OAS_SUBNET: $$OAS_SUBNET
+      OAS_STACKS_NAMES: "CondorBmaster"
       OAS_FORCE_CLEANUP: false
       AWS_ACCESS_KEY_ID: $$AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY: $$AWS_SECRET_ACCESS_KEY
