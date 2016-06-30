@@ -27,6 +27,7 @@ publish:
       - $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER
     context: target
     insecure: true
+    storage_driver: overlay
 
 cache:
   mount:
