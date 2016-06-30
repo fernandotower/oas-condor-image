@@ -26,6 +26,6 @@ publish:
     insecure: true
     storage_driver: overlay
 
-cache:
-  mount:
-    - /drone/docker
+#cache:
+#  mount:
+#    - /drone/docker
