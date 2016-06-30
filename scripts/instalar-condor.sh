@@ -88,16 +88,7 @@ oci8.connection_class = "DEFAULT_CONNECTION_CLASS"
 extension=oci8.so
 EOF
 
-echo Verificar sintaxis de Apache
-sudo apachectl -t
-
-echo Verificar configuraciones de PHP
-figlet -f banner phpinfo
-php -r 'phpinfo();'
-
 # SCRIPTS
 sudo chmod +x /tmp/oas_scripts/*.sh
 sudo chown root:root /tmp/oas_scripts/*.sh
 sudo mv -f /tmp/oas_scripts/*.sh /usr/local/sbin/
-
-echo Finalizando

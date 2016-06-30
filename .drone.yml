@@ -25,9 +25,8 @@ publish:
     tag:
       - latest
       - $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER
-    file: Dockerfile
+    context: target
     insecure: true
-    storage_driver: overlay
 
 cache:
   mount:

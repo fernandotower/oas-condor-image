@@ -18,3 +18,5 @@ echo extraer imagen
 ./extract.sh
 echo generar terraform
 ./generate_terraform.sh
+echo preparar para publicar
+cp Dockerfile target/

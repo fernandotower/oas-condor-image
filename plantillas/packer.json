@@ -68,6 +68,10 @@
     {
       "type": "shell",
       "script": "scripts/instalar-condor.sh"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/verificar.sh"
     }
   ]
 

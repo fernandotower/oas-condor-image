@@ -51,13 +51,13 @@ mkdir /tmp/oci8-install.$$
 pushd  /tmp/oci8-install.$$
 # Esta version especifica de OCI8 es necesaria para PHP 5.2 a 5.6 (Centos 7 incluye PHP 5.4)
 # link: https://pecl.php.net/package/oci8
-pear download pecl/oci8-1.4.10
-tar xvzf oci8-*.tgz
+pear -q download pecl/oci8-1.4.10
+tar xzf oci8-*.tgz
 cd oci8-*
 phpize
 ./configure "--with-oci8=shared,instantclient,${oracle_home}/lib"
 make
-sudo make install
+sudo make -s install
 popd
 rm -r -f /tmp/oci8-install.$$
 
