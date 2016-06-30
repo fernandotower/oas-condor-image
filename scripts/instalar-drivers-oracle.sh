@@ -56,7 +56,7 @@ tar xzf oci8-*.tgz
 cd oci8-*
 phpize
 ./configure "--with-oci8=shared,instantclient,${oracle_home}/lib"
-make
+make -s
 sudo make -s install
 popd
 rm -r -f /tmp/oci8-install.$$
