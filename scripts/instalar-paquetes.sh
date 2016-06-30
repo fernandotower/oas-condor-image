@@ -10,8 +10,8 @@
 
 set -e -u
 
-sudo yum install -y -q figlet
+sudo yum install -y -q -e 0 figlet
 
 figlet -f banner paquetes
 
-sudo yum install -yq git ntp httpd php php-mysql gcc make php-pear php-devel awscli jq php-pgsql
+sudo yum install -y -q -e 0 git ntp httpd php php-mysql gcc make php-pear php-devel awscli jq php-pgsql

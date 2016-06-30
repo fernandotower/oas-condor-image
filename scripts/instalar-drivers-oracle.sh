@@ -25,7 +25,7 @@ md5sum -c - << EOF
 ac5bf56bce1c1521e1ca1984c3374a93  /tmp/rpms/${devel_rpm}
 EOF
 
-sudo yum install -y -q \
+sudo yum install -y -q -e 0 \
                 "/tmp/rpms/${basic_rpm}" \
                 "/tmp/rpms/${devel_rpm}"
 

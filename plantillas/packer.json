@@ -7,7 +7,6 @@
     "oas-amibuilder-role": "{{env `STACK_AppProfile`}}",
     "external-ref": "{{env `OAS_EXTERNAL_REF`}}",
     "expiration-timestamp": "{{env `OAS_EXPIRATION_TIMESTAMP`}}",
-    "packer-expiration-timestamp": "{{env `PACKER_EXPIRATION_TIMESTAMP`}}",
     "spot-price-bid": "{{env `AWS_SPOT_PRICE_BID`}}",
     "instance-type": "{{env `PACKER_INSTANCE_TYPE`}}"
   },
@@ -22,12 +21,6 @@
         "external-ref": "{{user `external-ref`}}",
         "promoted": "no",
         "expiration-timestamp": "{{user `expiration-timestamp`}}"
-      },
-      "run_tags": {
-        "ami-name": "condor",
-        "external-ref": "{{user `external-ref`}}",
-        "promoted": "no",
-        "expiration-timestamp": "{{user `packer-expiration-timestamp`}}"
       },
       "instance_type": "{{user `instance-type`}}",
       "spot_price": "{{user `spot-price-bid`}}",

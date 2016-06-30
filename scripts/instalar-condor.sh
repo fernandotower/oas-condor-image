@@ -93,13 +93,7 @@ sudo apachectl -t
 
 echo Verificar configuraciones de PHP
 figlet -f banner phpinfo
-php << EOF > /tmp/phpinfo.log
-<?php
-  phpinfo();
-?>
-EOF
-cat /tmp/phpinfo.log
-rm /tmp/phpinfo.log
+php -r 'phpinfo();'
 
 # SCRIPTS
 sudo chmod +x /tmp/oas_scripts/*.sh

@@ -9,24 +9,6 @@ then
   NOW="$((NOW+2592000))"
 fi
 
-echo Buscando instancias para borrar
-
-delete_instances="$(
-  aws ec2 describe-instances --filters \
-    "Name=tag:promoted,Values=no" \
-    "Name=tag:Name,Values=Packer Builder" \
-    "Name=tag:ami-name,Values=condor" |
-  jq -r --arg NOW "${NOW}" '.Reservations[]|.Instances[] | select(.Tags[]|(.Key == "expiration-timestamp" and (.Value|tonumber) <= ($NOW|tonumber))) | .InstanceId'
-)"
-
-if [ -n "$delete_instances" ]
-then
-  echo Borrando instancias $delete_instances
-  set -x
-  aws terminate-instances --instance-ids $delete_instances
-  set +x
-fi
-
 echo Buscando amis para borrar
 
 delete_amis="$(

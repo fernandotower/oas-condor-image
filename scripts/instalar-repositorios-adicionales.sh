@@ -7,4 +7,4 @@ set -e -u
 echo Agregando epel
 
 # Repositorio EPEL
-sudo yum install -y -q epel-release
+sudo yum install -y -q -e 0 epel-release
