@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -e -u
 
 # extraer el artefacto a partir del log y crear un json con eso
 awk -F, '

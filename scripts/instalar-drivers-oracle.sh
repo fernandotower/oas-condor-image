@@ -2,7 +2,7 @@
 
 # rationale: La aplicación se conecta a una base de datos Oracle
 
-set -eu
+set -e -u
 
 figlet -f banner drivers
 
@@ -14,7 +14,7 @@ basic_rpm="oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm"
 devel_rpm="oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm"
 oracle_home="/usr/lib/oracle/12.1/client64"
 
-mkdir -pv /tmp/rpms
+mkdir -p /tmp/rpms
 
 aws s3 cp "s3://${oas_repo}/rpms/${basic_rpm}" "/tmp/rpms/"
 aws s3 cp "s3://${oas_repo}/rpms/${devel_rpm}" "/tmp/rpms/"
@@ -25,11 +25,11 @@ md5sum -c - << EOF
 ac5bf56bce1c1521e1ca1984c3374a93  /tmp/rpms/${devel_rpm}
 EOF
 
-sudo yum install -y \
+sudo yum install -y -q \
                 "/tmp/rpms/${basic_rpm}" \
                 "/tmp/rpms/${devel_rpm}"
 
-rm -rfv /tmp/rpms
+rm -r -f /tmp/rpms
 
 oracle_home_profile="/etc/profile.d/oas_oracle_home.sh"
 echo Escribiendo $oracle_home_profile
@@ -59,7 +59,7 @@ phpize
 make
 sudo make install
 popd
-rm -rf /tmp/oci8-install.$$
+rm -r -f /tmp/oci8-install.$$
 
 sudo ldconfig
 

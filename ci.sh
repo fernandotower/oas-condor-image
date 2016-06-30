@@ -1,11 +1,10 @@
 #!/bin/bash
 
-set -eu
-
+set -e -u
 
 echo limpiar target
-rm -rf target
-mkdir -pv target
+rm -r -f target
+mkdir -p target
 echo obtener variables
 ./stack_vars.sh
 source target/stack_vars.sh

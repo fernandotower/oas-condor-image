@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -e -u
 
 NOW="$(date +%s)"
 if [ "${OAS_FORCE_CLEANUP:-}" = "true" ]

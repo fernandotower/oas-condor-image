@@ -2,6 +2,7 @@
 
 set -eu
 
+# subir los rpms al bucket de aprovisionamiento si estos aún no se han subido
 base_s3="s3://${STACK_CloudFormerRepositorioRPM}/rpms"
 
 for rpm in *.rpm

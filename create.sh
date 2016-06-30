@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -e -u
 
 packer -machine-readable validate plantillas/packer.json
 
