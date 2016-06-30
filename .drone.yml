@@ -26,6 +26,7 @@ publish:
       - latest
       - $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER
     context: target
+    file: target/Dockerfile
     insecure: true
     storage_driver: overlay
 
