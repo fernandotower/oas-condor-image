@@ -18,7 +18,7 @@ condor-image
    rm .drone.sec.yml
    git add .drone.sec
    git commit -m "configurando secretos"
-   git push origin master
+   # git push <<remote>> <<branch>>
    ```
 
 Actualmente este repositorio genera imágenes de AWS (AMIs).
