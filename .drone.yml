@@ -1,6 +1,5 @@
 build:
-  ami:
-    debug: true
+  build_ami:
     image: localhost:5000/plataforma/packer-buildpack:master-a01c657-0
     environment:
       OAS_STACKS_NAMES: "CondorBmaster"

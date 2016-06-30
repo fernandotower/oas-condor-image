@@ -2,12 +2,15 @@
 
 set -eu
 
-rm -rf target
-mkdir -p target
 
-echo stack vars
+echo limpiar target
+rm -rf target
+mkdir -pv target
+echo obtener variables
 ./stack_vars.sh
 source target/stack_vars.sh
+echo aprovisionar paquetes
+./paquetes.sh
 echo cleanup
 ./cleanup.sh
 echo crear imagen

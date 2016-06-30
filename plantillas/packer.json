@@ -1,0 +1,81 @@
+{
+
+  "variables": {
+    "oas-repo-name": "{{env `STACK_RepositorioRPM`}}",
+    "oas-vpc-id": "{{env `STACK_AmiBuilderVPC`}}",
+    "oas-subnet-id": "{{env `STACK_AmiBuilderSubnet1`}}",
+    "oas-amibuilder-role": "{{env `STACK_AmiBuilderInstanceProfile`}}",
+    "external-ref": "{{env `OAS_EXTERNAL_REF`}}",
+    "expiration-timestamp": "{{env `OAS_EXPIRATION_TIMESTAMP`}}",
+    "packer-expiration-timestamp": "{{env `PACKER_EXPIRATION_TIMESTAMP`}}",
+    "spot-price-bid": "{{env `AWS_SPOT_PRICE_BID`}}",
+    "instance-type": "{{env `PACKER_INSTANCE_TYPE`}}"
+  },
+
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "ssh_pty": "true",
+      "ami_name": "condor {{user `external-ref`}}",
+      "tags": {
+        "ami-name": "condor",
+        "external-ref": "{{user `external-ref`}}",
+        "promoted": "no",
+        "expiration-timestamp": "{{user `expiration-timestamp`}}"
+      },
+      "run_tags": {
+        "ami-name": "condor",
+        "external-ref": "{{user `external-ref`}}",
+        "promoted": "no",
+        "expiration-timestamp": "{{user `packer-expiration-timestamp`}}"
+      },
+      "instance_type": "{{user `instance-type`}}",
+      "spot_price": "{{user `spot-price-bid`}}",
+      "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
+      "ssh_timeout": "10m",
+      "associate_public_ip_address": true,
+      "region": "us-east-1",
+      "source_ami": "ami-6d1c2007",
+      "ssh_username": "centos",
+      "iam_instance_profile": "{{user `oas-amibuilder-role`}}",
+      "launch_block_device_mappings": [
+        {
+          "volume_type": "gp2",
+          "device_name": "/dev/sda1",
+          "delete_on_termination": true,
+          "volume_size": 30
+        }
+      ],
+      "vpc_id": "{{user `oas-vpc-id`}}",
+      "subnet_id": "{{user `oas-subnet-id`}}"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "oas_scripts",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/instalar-repositorios-adicionales.sh"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/instalar-paquetes.sh"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/instalar-drivers-oracle.sh",
+      "environment_vars": [
+        "oas_repo={{user `oas-repo-name`}}"
+      ]
+    },
+    {
+      "type": "shell",
+      "script": "scripts/instalar-condor.sh"
+    }
+  ]
+
+}

@@ -2,7 +2,7 @@
 
 set -eu
 
-packer -machine-readable validate plantilla.json
+packer -machine-readable validate plantillas/packer.json
 
 now="$(date +%s)"
 OAS_EXPIRATION_TIMESTAMP="$((now+2592000))"  # un mes
@@ -13,7 +13,7 @@ export PACKER_EXPIRATION_TIMESTAMP
 
 if [ "${PACKER_MOCK_CREATION:-}" != "true" ]
 then
-  packer -machine-readable build plantilla.json | tee target/packer.log
+  packer -machine-readable build plantillas/packer.json | tee target/packer.log
 else
   tee target/packer.log << EOF
 timestamp,packer-provider,artifact,0,id,us-east-1:ami-fake1
