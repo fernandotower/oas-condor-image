@@ -9,7 +9,7 @@ do
   if ! aws s3 ls "${base_s3}/${rpm}"
   then
     echo copiando $rpm al bucket $base_s3
-    aws s3 cp "${rpm}" "${base_s3}"
+    aws s3 cp "${rpm}" "${base_s3}/${rpm}"
   else
     echo $rpm ya esta en el bucket $base_s3
   fi
