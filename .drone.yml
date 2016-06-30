@@ -1,6 +1,6 @@
 build:
   build_ami:
-    image: 10.20.0.126:5000/plataforma/base-os:develop-c11852e-3
+    image: 10.20.0.126:5000/plataforma/packer-buildpack:develop-a7b4431-2
     environment:
       OAS_STACKS_NAMES: "condorB$$BRANCH"
       OAS_FORCE_CLEANUP: false
