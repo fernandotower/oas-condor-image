@@ -1,13 +1,12 @@
 {
 
   "variables": {
-    "oas-repo-name": "{{env `STACK_RepositorioRPM`}}",
-    "oas-vpc-id": "{{env `STACK_AmiBuilderVPC`}}",
-    "oas-subnet-id": "{{env `STACK_AmiBuilderSubnet1`}}",
-    "oas-amibuilder-role": "{{env `STACK_AmiBuilderInstanceProfile`}}",
+    "oas-repo-name": "{{env `STACK_CloudFormerRepositorioRPM`}}",
+    "oas-vpc-id": "{{env `STACK_CloudFormerVPC`}}",
+    "oas-subnet-id": "{{env `STACK_CloudFormerSubnet`}}",
+    "oas-amibuilder-role": "{{env `STACK_AppProfile`}}",
     "external-ref": "{{env `OAS_EXTERNAL_REF`}}",
     "expiration-timestamp": "{{env `OAS_EXPIRATION_TIMESTAMP`}}",
-    "packer-expiration-timestamp": "{{env `PACKER_EXPIRATION_TIMESTAMP`}}",
     "spot-price-bid": "{{env `AWS_SPOT_PRICE_BID`}}",
     "instance-type": "{{env `PACKER_INSTANCE_TYPE`}}"
   },
@@ -22,12 +21,6 @@
         "external-ref": "{{user `external-ref`}}",
         "promoted": "no",
         "expiration-timestamp": "{{user `expiration-timestamp`}}"
-      },
-      "run_tags": {
-        "ami-name": "condor",
-        "external-ref": "{{user `external-ref`}}",
-        "promoted": "no",
-        "expiration-timestamp": "{{user `packer-expiration-timestamp`}}"
       },
       "instance_type": "{{user `instance-type`}}",
       "spot_price": "{{user `spot-price-bid`}}",
@@ -53,6 +46,10 @@
 
   "provisioners": [
     {
+      "type": "shell",
+      "script": "scripts/iniciar.sh"
+    },
+    {
       "type": "file",
       "source": "oas_scripts",
       "destination": "/tmp"
@@ -75,6 +72,14 @@
     {
       "type": "shell",
       "script": "scripts/instalar-condor.sh"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/verificar.sh"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/finalizar.sh"
     }
   ]
 

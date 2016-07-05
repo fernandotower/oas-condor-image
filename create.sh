@@ -1,15 +1,13 @@
 #!/bin/bash
 
-set -eu
+set -e -u
 
 packer -machine-readable validate plantillas/packer.json
 
 now="$(date +%s)"
 OAS_EXPIRATION_TIMESTAMP="$((now+2592000))"  # un mes
-PACKER_EXPIRATION_TIMESTAMP="$((now+86400))" # un día
 
 export OAS_EXPIRATION_TIMESTAMP
-export PACKER_EXPIRATION_TIMESTAMP
 
 if [ "${PACKER_MOCK_CREATION:-}" != "true" ]
 then

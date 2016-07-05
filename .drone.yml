@@ -1,8 +1,11 @@
+# ADVERTENCIA:
+# Cualquier cambio en este archivo requiere que se vuelva a generar el arhivo de secretos .drone.sec leer el README.md para saber como hacerlo.
+
 build:
   build_ami:
-    image: localhost:5000/plataforma/packer-buildpack:master-a01c657-0
+    image: 10.20.0.126:5000/plataforma/packer-buildpack:develop-a7b4431-2
     environment:
-      OAS_STACKS_NAMES: "CondorBmaster"
+      OAS_STACKS_NAMES: "condorB$$BRANCH"
       OAS_FORCE_CLEANUP: false
       AWS_ACCESS_KEY_ID: $$AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY: $$AWS_SECRET_ACCESS_KEY
@@ -17,27 +20,16 @@ build:
 
 publish:
   docker:
-    registry: 172.17.0.1:5000
+    registry: 10.20.0.126:5000
     repo: plataforma/condor-image
     tag:
       - latest
       - $$BRANCH-$${COMMIT:0:7}-$$BUILD_NUMBER
-    file: Dockerfile
+    context: target
+    file: target/Dockerfile
     insecure: true
     storage_driver: overlay
 
 cache:
   mount:
     - /drone/docker
-
-notify:
-  webhook:
-    urls:
-      - https://api.telegram.org/bot$$TELEGRAM_BOT_KEY/sendMessage
-    content_type: application/json
-    template: >
-      {
-        "chat_id": "$$TELEGRAM_CHAT_ID",
-        "parse_mode": "Markdown",
-        "text": "[{{uppercase build.status}}]({{build.link_url}}) {{repo.full_name}}:{{build.branch}}-{{truncate build.commit 7}}-{{build.number}} {{build.author}} authored \"{{truncate build.message 25}}\"... took {{duration build.started_at build.finished_at}}"
-      }

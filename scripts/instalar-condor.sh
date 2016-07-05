@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -e -u
 
 figlet -f banner condor
 
@@ -15,7 +15,7 @@ egrep '^SELINUX=' /etc/selinux/config
 # rationale: Tener el servidor en la zona horaria local
 echo Configurando hora
 sudo mv /etc/localtime /etc/localtime.packer-bak
-sudo ln -sv /usr/share/zoneinfo/America/Bogota /etc/localtime
+sudo ln -s -f /usr/share/zoneinfo/America/Bogota /etc/localtime
 sudo systemctl enable ntpd.service
 sudo timedatectl set-timezone America/Bogota
 sudo timedatectl set-ntp true
@@ -88,23 +88,7 @@ oci8.connection_class = "DEFAULT_CONNECTION_CLASS"
 extension=oci8.so
 EOF
 
-echo Verificar sintaxis de Apache
-sudo apachectl -t
-
-echo Verificar configuraciones de PHP
-figlet -f banner phpinfo
-php << EOF
-<?php
-  phpinfo();
-?>
-EOF
-
 # SCRIPTS
-sudo chmod -v +x /tmp/oas_scripts/*.sh
-sudo chown -v root:root /tmp/oas_scripts/*.sh
-sudo mv -vi /tmp/oas_scripts/*.sh /usr/local/sbin/
-
-echo Progamando script de verificación de tnsnames.ora
-sudo ln -sv /usr/local/sbin/check-tnsnames-ora.sh /etc/cron.hourly/50-check-tnsnames-ora.sh
-
-echo Finalizando
+sudo chmod +x /tmp/oas_scripts/*.sh
+sudo chown root:root /tmp/oas_scripts/*.sh
+sudo mv -f /tmp/oas_scripts/*.sh /usr/local/sbin/

@@ -8,10 +8,10 @@
 # rationale: awscli: interactuar con AWS programáticamente
 # rationale: jq: procesar respuestas en JSON de diversas APIs
 
-sudo yum install -y figlet
+set -e -u
+
+sudo yum install -y -q -e 0 figlet
 
 figlet -f banner paquetes
 
-set -eu
-
-sudo yum install -y git ntp httpd php php-mysql gcc make php-pear php-devel awscli jq php-pgsql
+sudo yum install -y -q -e 0 git ntp httpd php php-mysql gcc php-pear php-devel awscli jq php-pgsql
