@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# rationale: en los repositorios EPEL se encuentran paquetes necesarios como: TODO
+# rationale: en los repositorios EPEL se encuentran paquetes necesarios como: php-mcrypt entre otros
 
 set -e -u
 
