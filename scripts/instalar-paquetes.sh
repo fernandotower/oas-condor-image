@@ -14,4 +14,6 @@ figlet -f banner paquetes
 
 set -eu
 
-sudo yum install -y git mariadb ntp httpd php php-mysql gcc make php-pear php-devel awscli jq php-pgsql
+sudo yum install -y gcc make ntp git awscli jq libpng libxml2 httpd php php-devel php-mcrypt php-pear php-pgsql php-mysql
+
+
