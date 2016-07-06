@@ -24,9 +24,28 @@ date
 # APACHE
 sudo systemctl enable httpd
 
+echo Configurando apache
+
+# DirectoryIndex
+# rationale: funcionalidad aplicación
+directory_index_config="/etc/httpd/conf.d/50-oas-directoryindex.conf"
+echo Escribiendo $directory_index_config
+sudo tee $directory_index_config << EOF
+DirectoryIndex index.php index.html index.htm
+EOF
+
+# No directory listings
+# rationale: seguridad
+no_directory_listings="/etc/httpd/conf.d/50-oas-nodirectorylistings.conf"
+echo Escribiendo $no_directory_listings
+sudo tee $no_directory_listings << EOF
+<Directory />
+Options -Indexes
+</Directory>
+EOF
+
 # ServerAdmin
 # rationale: Cosmético
-echo Configurando apache
 server_admin_config="/etc/httpd/conf.d/50-oas-serveradmin.conf"
 echo Escribiendo $server_admin_config
 sudo tee $server_admin_config << EOF
